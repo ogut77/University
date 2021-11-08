@@ -33,3 +33,9 @@ Homework 6
 Tableau Visulization 1
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales-HulisiOgut/Dashboard1
+
+Tableau Visulization 2
+
+https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales3-HulisiOgut/Dashboard2
+
+
