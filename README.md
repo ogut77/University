@@ -42,4 +42,12 @@ Tableau Visulization 2
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales3-HulisiOgut/Dashboard2
 
+Tableau Visulization 3
+
+https://public.tableau.com/app/profile/hulisi.ogut/viz/SalesProfit_16366159781270/Dashboard1
+
+Tableau Report
+
+https://public.tableau.com/app/profile/hulisi.ogut/viz/GradeReport-HulisiOgut/Dashboard1
+
 
