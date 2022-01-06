@@ -34,6 +34,20 @@ Review Midterm
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/ReviewMidterm.ipynb ]
 
+Review Final
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/ReviewFinal.ipynb ]
+
+
+Review Final Answer
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/ReviewFinalAnswer.ipynb ]
+
+Review Midterm
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/ReviewMidterm.ipynb ]
+
+
 Tableau Visulization 1
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales-HulisiOgut/Dashboard1
