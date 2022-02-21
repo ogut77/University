@@ -20,6 +20,10 @@ Multiple Table Blank
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/MTBlank.ipynb ]
 
+Homework 3
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework3.ipynb ]
+
 Homework 4
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework4.ipynb ]
@@ -27,10 +31,6 @@ Homework 4
 Homework 5
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework5.ipynb ]
-
-Homework 6
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework6.ipynb ]
 
 Homework 10
 
