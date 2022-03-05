@@ -68,4 +68,10 @@ Tableau Report
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/GradeReport-HulisiOgut/Dashboard1
 
+Additional Resources on SQL
 
+https://sqlbolt.com/
+
+https://8weeksqlchallenge.com/
+
+https://www.w3schools.com/sql/default.asp
