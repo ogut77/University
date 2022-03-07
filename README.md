@@ -70,3 +70,7 @@ https://sqlbolt.com/
 https://8weeksqlchallenge.com/
 
 https://www.w3schools.com/sql/default.asp
+
+https://www.sqlcourse.com/
+
+https://www.sqlzoo.net/
