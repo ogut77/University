@@ -73,4 +73,4 @@ https://www.w3schools.com/sql/default.asp
 
 https://www.sqlcourse.com/
 
-https://www.sqlzoo.net/
+https://sqlzoo.net/wiki/SQL_Tutorial
