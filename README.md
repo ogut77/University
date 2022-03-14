@@ -32,6 +32,10 @@ Homework 5
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework5.ipynb ]
 
+Homework 6
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework6.docx]
+
 Homework 10
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework10.ipynb ]
