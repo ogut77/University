@@ -34,7 +34,7 @@ Homework 5
 
 Homework 6
 
-https://github.com/ogut77/University/blob/main/Homework6.docx
+https://github.com/ogut77/University/blob/main/Homework6.docx?raw=true
 
 Homework 10
 
