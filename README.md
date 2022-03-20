@@ -57,7 +57,7 @@ https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales-HulisiOgut/Dashboar
 
 Tableau Visulization 2
 
-https://public.tableau.com/app/profile/hulisi.ogut/viz/Sales3-HulisiOgut/Dashboard2
+https://public.tableau.com/app/profile/hulisi.ogut/viz/Profit2000106/Dashboard2
 
 Tableau Visulization 3
 
