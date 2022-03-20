@@ -61,11 +61,11 @@ https://public.tableau.com/app/profile/hulisi.ogut/viz/Profit2000106/Dashboard2
 
 Tableau Visulization 3
 
-https://public.tableau.com/app/profile/hulisi.ogut/viz/GlobalProfitHulisiOgut/Dashboard1
+https://public.tableau.com/app/profile/hulisi.ogut/viz/GSPD-HulusiOgut/Dashboard1
 
 Tableau Report
 
-https://public.tableau.com/app/profile/hulisi.ogut/viz/GradeReport-HulisiOgut/Dashboard1
+https://public.tableau.com/app/profile/hulisi.ogut/viz/GR-HulisiOgut/Dashboard2
 
 Additional Resources on SQL
 
