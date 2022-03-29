@@ -1,6 +1,3 @@
-Syllabus 
-
-https://github.com/ogut77/University/blob/main/SyllabusMIS.pdf
 
 Single Table
 
