@@ -75,3 +75,10 @@ https://www.w3schools.com/sql/default.asp
 https://www.sqlcourse.com/
 
 https://sqlzoo.net/wiki/SQL_Tutorial
+
+Tableau Material
+
+https://datayoga.ru/
+
+https://tableau.pro/marathon42
+
