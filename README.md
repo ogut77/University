@@ -76,6 +76,8 @@ https://www.sqlcourse.com/
 
 https://sqlzoo.net/wiki/SQL_Tutorial
 
+https://daetama.io/
+
 Tableau Material
 
 https://datayoga.ru/
