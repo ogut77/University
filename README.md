@@ -88,6 +88,7 @@ No-SQL Example
 https://colab.research.google.com/github/Giffy/MongoDB_PyMongo_Tutorial/blob/master/1_2_Bicing.ipynb#scrollTo=9QGdAZzDFtS3
 
 Chapter 1
+
 How UPS Is Using Big Data To Transform Package Deliveries
 https://www.youtube.com/watch?v=PSNIr1EMu_I
 
@@ -98,6 +99,7 @@ Survey: Small biz goes digital, web seen integral to surviving COVID-19
 https://twitter.com/YahooFinance/status/1439607949891194884
 
 Chapter 10
+
 Netflix vs. Blockbuster: How Netflix Came to Dominate the Video Streaming Market
 https://www.youtube.com/watch?v=p7_1hHb4Gvw&ab_channel=CircusStreet
 
