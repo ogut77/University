@@ -87,21 +87,23 @@ https://tableau.pro/marathon42
 No-SQL Example
 https://colab.research.google.com/github/Giffy/MongoDB_PyMongo_Tutorial/blob/master/1_2_Bicing.ipynb#scrollTo=9QGdAZzDFtS3
 
-Chapter 10
-Amazon Customer Centric Approach
-https://mobile.twitter.com/arvanaghi/status/1537519858233008128
-
 Chapter 1
 How UPS Is Using Big Data To Transform Package Deliveries
 https://www.youtube.com/watch?v=PSNIr1EMu_I
 
-https://www.youtube.com/watch?v=p7_1hHb4Gvw&ab_channel=CircusStreet
-![image](https://user-images.githubusercontent.com/45689370/189751824-e49cc191-9860-4242-8837-2b8ed9680196.png)
-
-
+How COVID-19 has pushed companies over the technology tipping point—and transformed business forever
 https://www.mckinsey.com/business-functions/strategy-and-corporate-finance/our-insights/how-covid-19-has-pushed-companies-over-the-technology-tipping-point-and-transformed-business-forever
 
-
+Survey: Small biz goes digital, web seen integral to surviving COVID-19
 https://twitter.com/YahooFinance/status/1439607949891194884
-![image](https://user-images.githubusercontent.com/45689370/189751549-5d5380a7-46b9-47a7-840d-13ced3fb848d.png)
+
+Chapter 10
+Netflix vs. Blockbuster: How Netflix Came to Dominate the Video Streaming Market
+https://www.youtube.com/watch?v=p7_1hHb4Gvw&ab_channel=CircusStreet
+Amazon Customer Centric Approach
+https://mobile.twitter.com/arvanaghi/status/1537519858233008128
+
+
+
+
 
