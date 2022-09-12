@@ -98,6 +98,9 @@ https://www.mckinsey.com/business-functions/strategy-and-corporate-finance/our-i
 Survey: Small biz goes digital, web seen integral to surviving COVID-19
 https://twitter.com/YahooFinance/status/1439607949891194884
 
+Amazon Customer Centric Approach
+https://mobile.twitter.com/arvanaghi/status/1537519858233008128
+
 Chapter 10
 
 Netflix vs. Blockbuster: How Netflix Came to Dominate the Video Streaming Market
