@@ -89,7 +89,6 @@ https://colab.research.google.com/github/Giffy/MongoDB_PyMongo_Tutorial/blob/mas
 
 Chapter 1
 How UPS Is Using Big Data To Transform Package Deliveries
-
 https://www.youtube.com/watch?v=PSNIr1EMu_I
 
 How COVID-19 has pushed companies over the technology tipping point—and transformed business forever
@@ -101,6 +100,7 @@ https://twitter.com/YahooFinance/status/1439607949891194884
 Chapter 10
 Netflix vs. Blockbuster: How Netflix Came to Dominate the Video Streaming Market
 https://www.youtube.com/watch?v=p7_1hHb4Gvw&ab_channel=CircusStreet
+
 Amazon Customer Centric Approach
 https://mobile.twitter.com/arvanaghi/status/1537519858233008128
 
