@@ -78,6 +78,10 @@ https://sqlzoo.net/wiki/SQL_Tutorial
 
 https://daetama.io/
 
+DataBase Questions
+
+https://github.com/ogut77/University/blob/main/DBQuestion.pdf
+
 Tableau Material
 
 https://datayoga.ru/
