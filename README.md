@@ -68,6 +68,10 @@ Super Store Data
 
 https://github.com/ogut77/University/blob/main/Superstore.xls
 
+Global Super Store Data
+
+https://github.com/ogut77/University/blob/main/GlobalSuperstore.xls
+
 Additional Resources on SQL
 
 https://sqlbolt.com/
