@@ -64,6 +64,10 @@ Tableau Report
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/GR-HulisiOgut/Dashboard2
 
+Super Store Data
+
+https://github.com/ogut77/University/blob/main/Superstore.xls
+
 Additional Resources on SQL
 
 https://sqlbolt.com/
