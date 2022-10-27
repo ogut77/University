@@ -46,6 +46,13 @@ Review Final
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/ReviewFinal.ipynb ]
 
+Super Store Data
+
+https://github.com/ogut77/University/blob/main/Superstore.xls
+
+Global Super Store Data
+
+https://github.com/ogut77/University/blob/main/GlobalSuperstore.xls
 
 
 Tableau Visulization 1
@@ -64,13 +71,6 @@ Tableau Report
 
 https://public.tableau.com/app/profile/hulisi.ogut/viz/GR-HulisiOgut/Dashboard2
 
-Super Store Data
-
-https://github.com/ogut77/University/blob/main/Superstore.xls
-
-Global Super Store Data
-
-https://github.com/ogut77/University/blob/main/GlobalSuperstore.xls
 
 Additional Resources on SQL
 
