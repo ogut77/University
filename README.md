@@ -1,21 +1,21 @@
 
-Single Table
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Query.ipynb ]
-
 Single Table Blank
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/QueryBlank.ipynb ]
 
-Multiple Table
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/MT.ipynb ]
+Single Table Answer
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Query.ipynb ]
 
 Multiple Table Blank
 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/MTBlank.ipynb ]
+
+Multiple Table Answer
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/MT.ipynb ]
 
 Homework 3
 
