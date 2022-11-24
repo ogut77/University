@@ -118,6 +118,11 @@ Chapter 5
 XML Example
 https://www.cbar.az/currencies/12.11.2022.xml
 
+Chapter 7
+TCP/IP
+https://www.youtube.com/watch?v=PpsEaqJV_A0
+
+
 
 
 Chapter 10
