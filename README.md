@@ -113,6 +113,13 @@ https://twitter.com/YahooFinance/status/1439607949891194884
 Amazon Customer Centric Approach
 https://mobile.twitter.com/arvanaghi/status/1537519858233008128
 
+Chapter 5
+
+XML Example
+https://www.cbar.az/currencies/12.11.2022.xml
+
+
+
 Chapter 10
 
 Netflix vs. Blockbuster: How Netflix Came to Dominate the Video Streaming Market
