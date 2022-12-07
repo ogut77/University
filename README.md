@@ -125,6 +125,10 @@ Chapter 7
 TCP/IP
 https://www.youtube.com/watch?v=PpsEaqJV_A0
 
+Chapter 9
+
+CRM
+https://www.youtube.com/watch?v=zDBSLcGp-80
 
 
 
