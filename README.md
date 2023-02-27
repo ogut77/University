@@ -1,3 +1,6 @@
+Syllabus
+
+https://github.com/ogut77/University/blob/main/MISSyllabus2023Spring.pdf
 
 Single Table Blank
 
