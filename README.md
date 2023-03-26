@@ -30,11 +30,13 @@ Homework 4
 
 Homework 5
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework5.ipynb ]
+https://github.com/ogut77/University/blob/main/Homework5.pdf?raw=true
+
 
 Homework 6
 
-https://github.com/ogut77/University/blob/main/Homework6.pdf?raw=true
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]https://colab.research.google.com/github/ogut77/University/blob/main/Homework6a.ipynb ]
+
 
 Homework 10
 
