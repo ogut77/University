@@ -135,7 +135,8 @@ Chapter 9
 CRM
 https://www.youtube.com/watch?v=zDBSLcGp-80
 
-
+Monday CRM
+https://www.youtube.com/watch?v=B6TQrgSA7Fw
 
 Chapter 10
 
