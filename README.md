@@ -53,7 +53,7 @@ Review Final
 
 Super Store Data
 
-https://github.com/ogut77/University/blob/main/Superstore.csv
+https://github.com/ogut77/University/blob/main/Superstore.xls
 
 Global Super Store Data
 
