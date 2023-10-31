@@ -30,7 +30,7 @@ Homework 4
 
 Homework 5
 
-https://github.com/ogut77/University/blob/main/Homework5.pdf?raw=true
+https://github.com/ogut77/University/blob/main/Homework5MIS.pdf?raw=true
 
 
 Homework 6
