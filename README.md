@@ -123,6 +123,9 @@ Chapter 5
 XML Example
 https://www.cbar.az/currencies/12.11.2022.xml
 
+Web Service Example 
+https://seffaflik.epias.com.tr/documentation/web-service-user-guide
+
 API Example 
 
 Chapter 7
