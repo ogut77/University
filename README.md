@@ -62,7 +62,7 @@ https://github.com/ogut77/University/blob/main/GlobalSuperstore.xls
 
 Tableau Visulization 1
 
-https://public.tableau.com/app/profile/hulisi.ogut/viz/SalesMISFall2023/Dashboard1
+[https://public.tableau.com/app/profile/hulisi.ogut/viz/SalesMISFall2023/Dashboard1](https://public.tableau.com/app/profile/hulisi.ogut/viz/SalesSpring2023/Dashboard1)
 
 Tableau Visulization 2
 
