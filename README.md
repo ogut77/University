@@ -124,10 +124,14 @@ XML Example
 https://www.cbar.az/currencies/12.11.2022.xml
 
 Web Service Example 
+
 https://seffaflik.epias.com.tr/documentation/web-service-user-guide
 https://colab.research.google.com/github/ogut77/University/blob/main/WebService.ipynb
+
 API Example 
+
 https://github.com/ogut77/University/blob/main/Apim.ipynb
+
 Chapter 7
 
 TCP/IP
