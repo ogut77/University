@@ -120,6 +120,9 @@ https://mobile.twitter.com/arvanaghi/status/1537519858233008128
 
 Chapter 5
 
+Software Eat World
+https://www.youtube.com/shorts/63AYyRObACE
+
 XML Example
 https://www.cbar.az/currencies/12.11.2022.xml
 
