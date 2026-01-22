@@ -105,6 +105,9 @@ No-SQL Example
 https://colab.research.google.com/github/Giffy/MongoDB_PyMongo_Tutorial/blob/master/1_2_Bicing.ipynb#scrollTo=9QGdAZzDFtS3
 
 Chapter 1
+https://companiesmarketcap.com/
+
+https://datareportal.com/social-media-users
 
 How UPS Is Using Big Data To Transform Package Deliveries
 https://www.youtube.com/watch?v=PSNIr1EMu_I
