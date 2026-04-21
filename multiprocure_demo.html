@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MultiProcure — Product Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #04263F;
+    --navy2: #063554;
+    --blue: #1565A8;
+    --blue2: #2278C8;
+    --blue-lt: #E4F0FB;
+    --amber: #D4890A;
+    --amber-lt: #FEF3DC;
+    --green: #1A7A4A;
+    --green-lt: #E4F5EC;
+    --red: #C0392B;
+    --red-lt: #FDECEA;
+    --ink: #0E1E2C;
+    --ink2: #2C3E50;
+    --muted: #637080;
+    --muted2: #8FA0B0;
+    --border: #D8E4EE;
+    --surface: #F5F9FD;
+    --white: #FFFFFF;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { font-size: 14px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--surface); color: var(--ink); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 52px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .nav-logo { font-family: var(--font-display); font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .nav-logo span { color: #F4B72A; }
+  .nav-tabs { display: flex; gap: 2px; }
+  .nav-tab {
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 500;
+    color: rgba(255,255,255,0.55); cursor: pointer; border: none; background: none;
+    font-family: var(--font-body); transition: all 0.15s;
+  }
+  .nav-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.07); }
+  .nav-tab.active { color: #fff; background: rgba(255,255,255,0.13); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-badge { font-size: 11px; color: #F4B72A; background: rgba(244,183,42,0.15); border: 1px solid rgba(244,183,42,0.3); padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .nav-btn { background: #1565A8; color: #fff; border: none; padding: 7px 16px; border-radius: 6px; font-size: 12px; font-family: var(--font-body); cursor: pointer; font-weight: 500; }
+
+  /* LAYOUT */
+  .shell { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 52px); }
+
+  /* SIDEBAR */
+  aside {
+    background: var(--white); border-right: 1px solid var(--border);
+    padding: 20px 0; display: flex; flex-direction: column;
+  }
+  .aside-section { padding: 0 12px 16px; }
+  .aside-label { font-size: 10px; font-weight: 600; color: var(--muted2); letter-spacing: 0.08em; text-transform: uppercase; padding: 0 8px 8px; }
+  .aside-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 7px; cursor: pointer;
+    color: var(--muted); font-size: 12.5px; font-weight: 400;
+    transition: all 0.12s; border: none; background: none; width: 100%; text-align: left;
+    font-family: var(--font-body);
+  }
+  .aside-item:hover { background: var(--surface); color: var(--ink); }
+  .aside-item.active { background: var(--blue-lt); color: var(--blue); font-weight: 500; }
+  .aside-icon { width: 16px; height: 16px; flex-shrink: 0; }
+  .aside-badge { margin-left: auto; background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
+  .aside-badge.amber { background: var(--amber); }
+  .aside-badge.red { background: var(--red); }
+  .aside-divider { height: 1px; background: var(--border); margin: 8px 20px; }
+
+  .aside-project-list { padding: 0 12px 8px; }
+  .proj-entry { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 7px; cursor: pointer; transition: background 0.12s; }
+  .proj-entry:hover { background: var(--surface); }
+  .proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .proj-entry-name { font-size: 12px; color: var(--ink2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proj-entry-pct { font-size: 11px; color: var(--muted2); }
+
+  /* MAIN */
+  main { display: flex; flex-direction: column; overflow: hidden; }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 52px; flex-shrink: 0;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 8px; }
+  .topbar-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--ink); }
+  .topbar-subtitle { font-size: 12px; color: var(--muted); }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .tb-chip { display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--muted); font-family: var(--font-body); }
+  .tb-chip svg { width: 13px; height: 13px; }
+  .tb-chip:hover { border-color: var(--blue); color: var(--blue); }
+  .tb-primary { background: var(--navy); color: #fff; border-color: var(--navy); padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--font-body); }
+
+  /* KPI STRIP */
+  .kpi-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-bottom: 1px solid var(--border); background: var(--white); }
+  .kpi { padding: 16px 20px; border-right: 1px solid var(--border); }
+  .kpi:last-child { border-right: none; }
+  .kpi-label { font-size: 11px; color: var(--muted); font-weight: 400; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+  .kpi-val { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -1px; margin-bottom: 3px; }
+  .kpi-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 10px; }
+  .kpi-delta.up { background: var(--green-lt); color: var(--green); }
+  .kpi-delta.warn { background: var(--amber-lt); color: var(--amber); }
+  .kpi-delta.down { background: var(--red-lt); color: var(--red); }
+
+  /* CONTENT GRID */
+  .content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 0; flex: 1; overflow: hidden; }
+  .content-main { padding: 20px; overflow-y: auto; }
+  .content-side { border-left: 1px solid var(--border); background: var(--white); overflow-y: auto; }
+
+  /* SECTION HEADERS */
+  .section-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ink); }
+  .section-action { font-size: 11px; color: var(--blue); cursor: pointer; font-weight: 500; }
+
+  /* PROJECT TABLE */
+  .proj-table { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+  .pt-head { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 1.3fr 80px; gap: 0; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .pt-th { font-size: 10.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .pt-row { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 1.3fr 80px; gap: 0; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.1s; cursor: pointer; }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-row:hover { background: var(--surface); }
+  .pt-name { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+  .pt-client { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .status-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+  .status-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+  .sp-active { background: var(--green-lt); color: var(--green); }
+  .sp-active::before { background: var(--green); }
+  .sp-warning { background: var(--amber-lt); color: var(--amber); }
+  .sp-warning::before { background: var(--amber); }
+  .sp-risk { background: var(--red-lt); color: var(--red); }
+  .sp-risk::before { background: var(--red); }
+  .bar-wrap { width: 80px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .pt-pct { font-size: 11.5px; font-weight: 500; color: var(--ink2); }
+  .pt-date { font-size: 11px; color: var(--muted); }
+  .pt-action { font-size: 11px; color: var(--blue); font-weight: 500; cursor: pointer; text-align: right; }
+
+  /* ALERTS */
+  .alerts-box { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+  .alert-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-item:hover { background: var(--surface); }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .alert-body { flex: 1; }
+  .alert-title { font-size: 12px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+  .alert-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .alert-time { font-size: 10px; color: var(--muted2); white-space: nowrap; margin-top: 2px; }
+  .alert-tag { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; margin-left: auto; flex-shrink: 0; }
+  .at-risk { background: var(--red-lt); color: var(--red); }
+  .at-warn { background: var(--amber-lt); color: var(--amber); }
+  .at-ai { background: var(--blue-lt); color: var(--blue); }
+
+  /* SIDE PANEL */
+  .side-section { padding: 16px; border-bottom: 1px solid var(--border); }
+  .side-label { font-size: 10px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+  /* SUPPLIER SCORES */
+  .supplier-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .supplier-row:last-child { margin-bottom: 0; }
+  .supp-name { font-size: 12px; color: var(--ink2); flex: 1; font-weight: 400; }
+  .score-bar-w { width: 70px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .score-bar-f { height: 100%; border-radius: 2px; }
+  .supp-score { font-size: 11.5px; font-weight: 600; width: 28px; text-align: right; }
+
+  /* MINI CHART */
+  .mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 52px; padding: 0 2px; }
+  .mc-bar { flex: 1; border-radius: 3px 3px 0 0; transition: opacity 0.2s; }
+  .mc-bar:hover { opacity: 0.8; }
+  .mc-labels { display: flex; justify-content: space-around; margin-top: 4px; }
+  .mc-lbl { font-size: 10px; color: var(--muted2); }
+
+  /* AI INSIGHT */
+  .ai-insight { background: var(--navy); border-radius: 8px; padding: 12px 14px; }
+  .ai-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .ai-spark { width: 16px; height: 16px; }
+  .ai-title { font-size: 11px; font-weight: 600; color: #F4B72A; letter-spacing: 0.04em; text-transform: uppercase; }
+  .ai-body { font-size: 11.5px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+  .ai-action { display: inline-block; margin-top: 8px; font-size: 11px; color: #F4B72A; font-weight: 500; cursor: pointer; }
+
+  /* RFQ TABLE */
+  .rfq-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .rfq-item:last-child { border-bottom: none; }
+  .rfq-mat { font-size: 11.5px; color: var(--ink); flex: 1; font-weight: 400; }
+  .rfq-supp { font-size: 11px; color: var(--muted); }
+  .rfq-status { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .rfq-sent { background: var(--blue-lt); color: var(--blue); }
+  .rfq-rcvd { background: var(--green-lt); color: var(--green); }
+  .rfq-over { background: var(--red-lt); color: var(--red); }
+
+  /* ACTIVITY FEED */
+  .activity-item { display: flex; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .activity-item:last-child { border-bottom: none; }
+  .act-avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .act-content { flex: 1; }
+  .act-text { font-size: 11.5px; color: var(--ink2); line-height: 1.5; }
+  .act-text b { font-weight: 500; color: var(--ink); }
+  .act-time { font-size: 10px; color: var(--muted2); margin-top: 2px; }
+
+  /* PULSE ANIMATION */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .pulse { animation: pulse 2s ease-in-out infinite; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation: fadeIn 0.4s ease both; }
+
+  @keyframes slideIn { from{transform:translateX(8px);opacity:0} to{transform:translateX(0);opacity:1} }
+
+  .content-panel { display: none; }
+  .content-panel.visible { display: contents; animation: fadeIn 0.3s ease both; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Multi<span>Procure</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab(this,'dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="switchTab(this,'projects')">Projects</button>
+    <button class="nav-tab" onclick="switchTab(this,'suppliers')">Suppliers</button>
+    <button class="nav-tab" onclick="switchTab(this,'rfq')">RFQ Center</button>
+    <button class="nav-tab" onclick="switchTab(this,'analytics')">Analytics</button>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">&#9679; Live demo</span>
+    <button class="nav-btn">+ New request</button>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="aside-section">
+      <div class="aside-label">Overview</div>
+      <button class="aside-item active">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        All projects
+        <span class="aside-badge">14</span>
+      </button>
+      <button class="aside-item">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Risk alerts
+        <span class="aside-badge red">3</span>
+      </button>
+      <button class="aside-item">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+        Pending RFQs
+        <span class="aside-badge amber">7</span>
+      </button>
+      <button class="aside-item">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Suppliers
+      </button>
+    </div>
+
+    <div class="aside-divider"></div>
+
+    <div class="aside-section">
+      <div class="aside-label">Active projects</div>
+    </div>
+    <div class="aside-project-list">
+      <div class="proj-entry">
+        <div class="proj-dot" style="background:#1A7A4A"></div>
+        <span class="proj-entry-name">bp — AIOC Turnaround</span>
+        <span class="proj-entry-pct">82%</span>
+      </div>
+      <div class="proj-entry">
+        <div class="proj-dot" style="background:#D4890A"></div>
+        <span class="proj-entry-name">Saipem — Shah Deniz</span>
+        <span class="proj-entry-pct">57%</span>
+      </div>
+      <div class="proj-entry">
+        <div class="proj-dot" style="background:#1565A8"></div>
+        <span class="proj-entry-name">SOCAR — Absheron</span>
+        <span class="proj-entry-pct">34%</span>
+      </div>
+      <div class="proj-entry">
+        <div class="proj-dot" style="background:#7B61BD"></div>
+        <span class="proj-entry-name">McDermott — Offshore</span>
+        <span class="proj-entry-pct">19%</span>
+      </div>
+      <div class="proj-entry">
+        <div class="proj-dot" style="background:#C0392B"></div>
+        <span class="proj-entry-name">Aramco — Ras Tanura</span>
+        <span class="proj-entry-pct">8%</span>
+      </div>
+    </div>
+
+    <div class="aside-divider"></div>
+
+    <div class="aside-section">
+      <div class="aside-label">Quick actions</div>
+      <button class="aside-item">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New RFQ
+      </button>
+      <button class="aside-item">
+        <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export report
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="topbar-title">Procurement dashboard</div>
+          <div class="topbar-subtitle" style="font-size:11px;color:var(--muted)">14 active projects &nbsp;·&nbsp; Last synced 2 min ago &nbsp;·&nbsp; <span class="pulse" style="color:var(--green);font-weight:500">&#9679; Live</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filter
+        </button>
+        <button class="tb-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          May 2025
+        </button>
+        <button class="tb-primary">+ New project</button>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Active projects
+        </div>
+        <div class="kpi-val">14</div>
+        <span class="kpi-delta up">&#9650; +3 this month</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Spend managed
+        </div>
+        <div class="kpi-val">$2.4M</div>
+        <span class="kpi-delta up">&#9650; 12% vs last quarter</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+          On-time delivery
+        </div>
+        <div class="kpi-val">96.4%</div>
+        <span class="kpi-delta warn">&#9650; Target: 95%</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          Open risk alerts
+        </div>
+        <div class="kpi-val">3</div>
+        <span class="kpi-delta down">&#9660; Needs attention</span>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
+      <div class="content-main">
+
+        <!-- ALERTS -->
+        <div class="section-hd">
+          <div class="section-title">&#9888; Risk alerts &amp; AI insights</div>
+          <span class="section-action">View all</span>
+        </div>
+        <div class="alerts-box fade-in" style="margin-bottom:20px">
+          <div class="alert-item" onclick="highlightAlert(this)">
+            <div class="alert-dot" style="background:var(--red)"></div>
+            <div class="alert-body">
+              <div class="alert-title">Supplier delay risk — Pump seals (AIOC Project)</div>
+              <div class="alert-sub">Al-Jabir Supply Co. has a 68% on-time rate for this SKU. Predicted 11-day delay. AI recommends alternate sourcing from Caspian Industrial.</div>
+              <div class="alert-time">Flagged 34 min ago</div>
+            </div>
+            <span class="alert-tag at-risk">High risk</span>
+          </div>
+          <div class="alert-item" onclick="highlightAlert(this)">
+            <div class="alert-dot" style="background:var(--amber)"></div>
+            <div class="alert-body">
+              <div class="alert-title">Consolidation opportunity — Shah Deniz + AIOC</div>
+              <div class="alert-sub">Similar valve orders across 2 projects. Bundling saves est. $18,400 and cuts lead time by 6 days.</div>
+              <div class="alert-time">Flagged 2 hr ago</div>
+            </div>
+            <span class="alert-tag at-warn">Cost saving</span>
+          </div>
+          <div class="alert-item" onclick="highlightAlert(this)">
+            <div class="alert-dot" style="background:var(--blue)"></div>
+            <div class="alert-body">
+              <div class="alert-title">AI auto-drafted 4 supplier follow-up emails</div>
+              <div class="alert-sub">RFQ deadlines passed for Absheron project. Reminders sent to TechnoKaz, Gulf Parts, and 2 others.</div>
+              <div class="alert-time">Sent 4 hr ago</div>
+            </div>
+            <span class="alert-tag at-ai">AI action</span>
+          </div>
+        </div>
+
+        <!-- PROJECT TABLE -->
+        <div class="section-hd">
+          <div class="section-title">Project tracker</div>
+          <span class="section-action">+ Add project</span>
+        </div>
+        <div class="proj-table fade-in">
+          <div class="pt-head">
+            <div class="pt-th">Project / Client</div>
+            <div class="pt-th">Status</div>
+            <div class="pt-th">Progress</div>
+            <div class="pt-th">Spend</div>
+            <div class="pt-th">Next deadline</div>
+            <div class="pt-th" style="text-align:right">Action</div>
+          </div>
+          <div class="pt-row" onclick="selectRow(this)">
+            <div><div class="pt-name">AIOC Turnaround MRO</div><div class="pt-client">bp Azerbaijan</div></div>
+            <div><span class="status-pill sp-active">Active</span></div>
+            <div style="display:flex;align-items:center;gap:7px"><div class="bar-wrap"><div class="bar-fill" style="width:82%;background:#1A7A4A"></div></div><span class="pt-pct">82%</span></div>
+            <div class="pt-date">$740K</div>
+            <div class="pt-date">18 May</div>
+            <div class="pt-action">View</div>
+          </div>
+          <div class="pt-row" onclick="selectRow(this)">
+            <div><div class="pt-name">Shah Deniz Phase 3</div><div class="pt-client">Saipem</div></div>
+            <div><span class="status-pill sp-warning">At risk</span></div>
+            <div style="display:flex;align-items:center;gap:7px"><div class="bar-wrap"><div class="bar-fill" style="width:57%;background:#D4890A"></div></div><span class="pt-pct">57%</span></div>
+            <div class="pt-date">$520K</div>
+            <div class="pt-date">22 May</div>
+            <div class="pt-action">View</div>
+          </div>
+          <div class="pt-row" onclick="selectRow(this)">
+            <div><div class="pt-name">Absheron Procurement</div><div class="pt-client">SOCAR</div></div>
+            <div><span class="status-pill sp-active">Active</span></div>
+            <div style="display:flex;align-items:center;gap:7px"><div class="bar-wrap"><div class="bar-fill" style="width:34%;background:#1565A8"></div></div><span class="pt-pct">34%</span></div>
+            <div class="pt-date">$310K</div>
+            <div class="pt-date">30 May</div>
+            <div class="pt-action">View</div>
+          </div>
+          <div class="pt-row" onclick="selectRow(this)">
+            <div><div class="pt-name">Offshore MRO Package</div><div class="pt-client">McDermott</div></div>
+            <div><span class="status-pill sp-active">Active</span></div>
+            <div style="display:flex;align-items:center;gap:7px"><div class="bar-wrap"><div class="bar-fill" style="width:19%;background:#7B61BD"></div></div><span class="pt-pct">19%</span></div>
+            <div class="pt-date">$190K</div>
+            <div class="pt-date">4 Jun</div>
+            <div class="pt-action">View</div>
+          </div>
+          <div class="pt-row" onclick="selectRow(this)">
+            <div><div class="pt-name">Ras Tanura Maintenance</div><div class="pt-client">Saudi Aramco</div></div>
+            <div><span class="status-pill sp-risk">Delayed</span></div>
+            <div style="display:flex;align-items:center;gap:7px"><div class="bar-wrap"><div class="bar-fill" style="width:8%;background:#C0392B"></div></div><span class="pt-pct">8%</span></div>
+            <div class="pt-date">$95K</div>
+            <div class="pt-date">10 Jun</div>
+            <div class="pt-action">View</div>
+          </div>
+        </div>
+
+        <!-- RFQ MINI TABLE -->
+        <div class="section-hd">
+          <div class="section-title">Active RFQs</div>
+          <span class="section-action">RFQ center</span>
+        </div>
+        <div class="proj-table fade-in">
+          <div style="padding:4px 0">
+            <div class="rfq-item" style="padding:10px 16px">
+              <div style="flex:1"><div class="rfq-mat">Ball valves 2" — 40 units</div><div class="rfq-supp">TechnoKaz Supply · AIOC</div></div>
+              <span class="rfq-status rfq-rcvd">Response received</span>
+            </div>
+            <div class="rfq-item" style="padding:10px 16px">
+              <div style="flex:1"><div class="rfq-mat">Mechanical seals — 120 units</div><div class="rfq-supp">3 suppliers · Shah Deniz</div></div>
+              <span class="rfq-status rfq-sent">Awaiting response</span>
+            </div>
+            <div class="rfq-item" style="padding:10px 16px">
+              <div style="flex:1"><div class="rfq-mat">E&amp;I cable trays — bulk</div><div class="rfq-supp">Gulf Parts Ltd · Absheron</div></div>
+              <span class="rfq-status rfq-over">Overdue</span>
+            </div>
+            <div class="rfq-item" style="padding:10px 16px;border:none">
+              <div style="flex:1"><div class="rfq-mat">Bearing assemblies — 18 sets</div><div class="rfq-supp">Caspian Industrial · McDermott</div></div>
+              <span class="rfq-status rfq-sent">Awaiting response</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE PANEL -->
+      <div class="content-side">
+
+        <!-- AI INSIGHT -->
+        <div class="side-section">
+          <div class="ai-insight">
+            <div class="ai-header">
+              <svg class="ai-spark" viewBox="0 0 24 24" fill="none" stroke="#F4B72A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span class="ai-title">AI insight</span>
+            </div>
+            <div class="ai-body">Consolidating valve orders across AIOC and Shah Deniz projects saves <strong style="color:#fff">$18,400</strong> and reduces lead time by 6 days. Recommended supplier: Caspian Industrial (score 94).</div>
+            <span class="ai-action" onclick="triggerAction()">Apply consolidation &#8594;</span>
+          </div>
+        </div>
+
+        <!-- SUPPLIER SCORES -->
+        <div class="side-section">
+          <div class="side-label">Top supplier scores</div>
+          <div class="supplier-row">
+            <div style="width:26px;height:26px;border-radius:50%;background:#E4F0FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#1565A8;flex-shrink:0">CI</div>
+            <span class="supp-name">Caspian Industrial</span>
+            <div class="score-bar-w"><div class="score-bar-f" style="width:94%;background:#1A7A4A"></div></div>
+            <span class="supp-score" style="color:#1A7A4A">94</span>
+          </div>
+          <div class="supplier-row">
+            <div style="width:26px;height:26px;border-radius:50%;background:#E4F0FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#1565A8;flex-shrink:0">TK</div>
+            <span class="supp-name">TechnoKaz Supply</span>
+            <div class="score-bar-w"><div class="score-bar-f" style="width:88%;background:#1A7A4A"></div></div>
+            <span class="supp-score" style="color:#1A7A4A">88</span>
+          </div>
+          <div class="supplier-row">
+            <div style="width:26px;height:26px;border-radius:50%;background:#E4F0FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#1565A8;flex-shrink:0">GP</div>
+            <span class="supp-name">Gulf Parts Ltd</span>
+            <div class="score-bar-w"><div class="score-bar-f" style="width:76%;background:#D4890A"></div></div>
+            <span class="supp-score" style="color:#D4890A">76</span>
+          </div>
+          <div class="supplier-row">
+            <div style="width:26px;height:26px;border-radius:50%;background:#FDECEA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#C0392B;flex-shrink:0">AJ</div>
+            <span class="supp-name">Al-Jabir Supply Co.</span>
+            <div class="score-bar-w"><div class="score-bar-f" style="width:58%;background:#C0392B"></div></div>
+            <span class="supp-score" style="color:#C0392B">58</span>
+          </div>
+        </div>
+
+        <!-- SPEND CHART -->
+        <div class="side-section">
+          <div class="side-label">Monthly spend (USD $K)</div>
+          <div class="mini-chart" id="spendChart"></div>
+          <div class="mc-labels">
+            <span class="mc-lbl">Jan</span><span class="mc-lbl">Feb</span><span class="mc-lbl">Mar</span>
+            <span class="mc-lbl">Apr</span><span class="mc-lbl">May</span>
+          </div>
+        </div>
+
+        <!-- ACTIVITY FEED -->
+        <div class="side-section" style="padding-bottom:0">
+          <div class="side-label">Activity feed</div>
+        </div>
+        <div>
+          <div class="activity-item">
+            <div class="act-avatar" style="background:#1565A8">SR</div>
+            <div class="act-content">
+              <div class="act-text"><b>Sara R.</b> approved PO #4821 for bp AIOC — Ball valves $12,400</div>
+              <div class="act-time">8 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-avatar" style="background:#7B61BD">AI</div>
+            <div class="act-content">
+              <div class="act-text"><b>AI engine</b> detected delay risk on Shah Deniz seals and flagged alternate supplier</div>
+              <div class="act-time">34 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-avatar" style="background:#1A7A4A">KM</div>
+            <div class="act-content">
+              <div class="act-text"><b>Kamran M.</b> submitted RFQ to 3 suppliers for Absheron cable trays</div>
+              <div class="act-time">1 hr ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-avatar" style="background:#D4890A">AI</div>
+            <div class="act-content">
+              <div class="act-text"><b>AI engine</b> sent automated follow-up to Gulf Parts Ltd — RFQ #3317 overdue</div>
+              <div class="act-time">4 hr ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-avatar" style="background:#04263F">NL</div>
+            <div class="act-content">
+              <div class="act-text"><b>Nigar L.</b> added Ras Tanura Maintenance project — Saudi Aramco onboarded</div>
+              <div class="act-time">Yesterday</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function switchTab(el, tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectRow(el) {
+  document.querySelectorAll('.pt-row').forEach(r => r.style.background = '');
+  el.style.background = '#EBF4FF';
+}
+
+function highlightAlert(el) {
+  document.querySelectorAll('.alert-item').forEach(a => a.style.background = '');
+  el.style.background = '#F5F9FD';
+}
+
+function triggerAction() {
+  const insight = document.querySelector('.ai-body');
+  insight.innerHTML = '<span style="color:#4ade80;font-weight:500">&#10003; Consolidation applied!</span> PO issued to Caspian Industrial. Lead time reduced by 6 days. Saving $18,400 logged.';
+  document.querySelector('.ai-action').style.display = 'none';
+}
+
+const spendData = [320, 410, 380, 490, 560];
+const maxSpend = Math.max(...spendData);
+const chart = document.getElementById('spendChart');
+spendData.forEach((v, i) => {
+  const bar = document.createElement('div');
+  bar.className = 'mc-bar';
+  const h = Math.round((v / maxSpend) * 48);
+  bar.style.height = h + 'px';
+  bar.style.background = i === spendData.length - 1 ? '#1565A8' : '#B5D4F4';
+  bar.title = '$' + v + 'K';
+  chart.appendChild(bar);
+});
+</script>
+</body>
+</html>
