@@ -246,6 +246,7 @@
   </div>
 </nav>
 
+<div id="panel-dashboard" class="tab-panel" style="display:flex">
 <div class="shell">
 
   <!-- SIDEBAR -->
@@ -602,12 +603,597 @@
       </div>
     </div>
   </main>
-</div>
+</div><!-- /shell -->
+</div><!-- /panel-dashboard -->
+
+<!-- ============================================================ PROJECTS TAB -->
+<div id="panel-projects" class="tab-panel" style="display:none;flex-direction:column;flex:1">
+  <div class="shell" style="min-height:calc(100vh - 52px)">
+    <aside>
+      <div class="aside-section">
+        <div class="aside-label">Filter</div>
+        <button class="aside-item active">
+          <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          All projects <span class="aside-badge">14</span>
+        </button>
+        <button class="aside-item">
+          <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Active <span class="aside-badge">9</span>
+        </button>
+        <button class="aside-item">
+          <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          At risk <span class="aside-badge red">3</span>
+        </button>
+        <button class="aside-item">
+          <svg class="aside-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Completed <span class="aside-badge" style="background:#1A7A4A">2</span>
+        </button>
+      </div>
+      <div class="aside-divider"></div>
+      <div class="aside-section">
+        <div class="aside-label">By client</div>
+        <button class="aside-item">bp Azerbaijan</button>
+        <button class="aside-item">SOCAR</button>
+        <button class="aside-item">Saipem</button>
+        <button class="aside-item">McDermott</button>
+        <button class="aside-item">Saudi Aramco</button>
+      </div>
+    </aside>
+    <main style="display:flex;flex-direction:column">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">Projects</div>
+          <div class="topbar-subtitle">14 projects · $2.4M managed spend</div>
+        </div>
+        <div class="topbar-right">
+          <button class="tb-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter
+          </button>
+          <button class="tb-primary">+ New project</button>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px;background:var(--surface)">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start">
+
+          <!-- PLANNING -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Planning</span>
+              <span style="font-size:10px;background:var(--surface);color:var(--muted);padding:2px 8px;border-radius:10px;font-weight:600">3</span>
+            </div>
+            <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Kashagan Phase II</div>
+                <div style="font-size:11px;color:var(--muted)">North Caspian Operating Co.</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--blue-lt);color:var(--blue);padding:2px 7px;border-radius:10px;font-weight:500">$420K est.</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Jun 30</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Tengiz Expansion Support</div>
+                <div style="font-size:11px;color:var(--muted)">Chevron Kazakhstan</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--blue-lt);color:var(--blue);padding:2px 7px;border-radius:10px;font-weight:500">$185K est.</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Jul 15</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Lukoil MRO Supply</div>
+                <div style="font-size:11px;color:var(--muted)">Lukoil Overseas</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--blue-lt);color:var(--blue);padding:2px 7px;border-radius:10px;font-weight:500">$90K est.</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Aug 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- IN PROCUREMENT -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em">In procurement</span>
+              <span style="font-size:10px;background:var(--blue-lt);color:var(--blue);padding:2px 8px;border-radius:10px;font-weight:600">6</span>
+            </div>
+            <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--surface);border:1px solid var(--blue);border-radius:8px;padding:12px;cursor:pointer">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">AIOC Turnaround MRO</div>
+                <div style="font-size:11px;color:var(--muted)">bp Azerbaijan</div>
+                <div style="height:4px;background:var(--border);border-radius:2px;margin:8px 0 4px"><div style="height:4px;background:#1A7A4A;border-radius:2px;width:82%"></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:10px;color:var(--muted2)">82% complete</span>
+                  <span style="font-size:10px;color:var(--muted2)">May 18</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Absheron Procurement</div>
+                <div style="font-size:11px;color:var(--muted)">SOCAR</div>
+                <div style="height:4px;background:var(--border);border-radius:2px;margin:8px 0 4px"><div style="height:4px;background:#1565A8;border-radius:2px;width:34%"></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:10px;color:var(--muted2)">34% complete</span>
+                  <span style="font-size:10px;color:var(--muted2)">May 30</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--amber);border-radius:8px;padding:12px;cursor:pointer">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                  <div style="font-size:12px;font-weight:500;color:var(--ink)">Shah Deniz Phase 3</div>
+                  <span style="font-size:10px;background:var(--amber-lt);color:var(--amber);padding:2px 6px;border-radius:8px;font-weight:600">At risk</span>
+                </div>
+                <div style="font-size:11px;color:var(--muted)">Saipem</div>
+                <div style="height:4px;background:var(--border);border-radius:2px;margin:8px 0 4px"><div style="height:4px;background:#D4890A;border-radius:2px;width:57%"></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:10px;color:var(--muted2)">57% complete</span>
+                  <span style="font-size:10px;color:var(--amber)">May 22 &#9888;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PO ISSUED -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em">PO Issued</span>
+              <span style="font-size:10px;background:var(--amber-lt);color:var(--amber);padding:2px 8px;border-radius:10px;font-weight:600">3</span>
+            </div>
+            <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Offshore MRO Package</div>
+                <div style="font-size:11px;color:var(--muted)">McDermott</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--amber-lt);color:var(--amber);padding:2px 7px;border-radius:10px;font-weight:500">3 POs open</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Jun 4</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">ACG Maintenance 2025</div>
+                <div style="font-size:11px;color:var(--muted)">bp Azerbaijan</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--amber-lt);color:var(--amber);padding:2px 7px;border-radius:10px;font-weight:500">2 POs open</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Jun 12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPLETED -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.06em">Completed</span>
+              <span style="font-size:10px;background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:10px;font-weight:600">2</span>
+            </div>
+            <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;opacity:0.75" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">AIOC Annual Instrument Spares</div>
+                <div style="font-size:11px;color:var(--muted)">bp Azerbaijan</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--green-lt);color:var(--green);padding:2px 7px;border-radius:10px;font-weight:500">&#10003; Delivered</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Apr 8</span>
+                </div>
+              </div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;opacity:0.75" onmouseenter="this.style.borderColor='var(--blue)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">SOCAR Electrical Retrofit</div>
+                <div style="font-size:11px;color:var(--muted)">SOCAR</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+                  <span style="font-size:10px;background:var(--green-lt);color:var(--green);padding:2px 7px;border-radius:10px;font-weight:500">&#10003; Delivered</span>
+                  <span style="font-size:10px;color:var(--muted2);margin-left:auto">Mar 22</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div><!-- /panel-projects -->
+
+<!-- ============================================================ SUPPLIERS TAB -->
+<div id="panel-suppliers" class="tab-panel" style="display:none;flex-direction:column;flex:1">
+  <div class="shell" style="min-height:calc(100vh - 52px)">
+    <aside>
+      <div class="aside-section">
+        <div class="aside-label">Filter</div>
+        <button class="aside-item active">All suppliers <span class="aside-badge">24</span></button>
+        <button class="aside-item">Preferred <span class="aside-badge" style="background:#1A7A4A">8</span></button>
+        <button class="aside-item">Under review <span class="aside-badge amber">4</span></button>
+        <button class="aside-item">Blocked <span class="aside-badge red">2</span></button>
+      </div>
+      <div class="aside-divider"></div>
+      <div class="aside-section">
+        <div class="aside-label">Category</div>
+        <button class="aside-item">MRO / Spares</button>
+        <button class="aside-item">Valves &amp; Fittings</button>
+        <button class="aside-item">Electrical &amp; Inst.</button>
+        <button class="aside-item">Mechanical</button>
+        <button class="aside-item">Consumables</button>
+      </div>
+    </aside>
+    <main style="display:flex;flex-direction:column">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">Suppliers</div>
+          <div class="topbar-subtitle">24 suppliers · 8 preferred · AI-scored</div>
+        </div>
+        <div class="topbar-right">
+          <button class="tb-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search suppliers
+          </button>
+          <button class="tb-primary">+ Onboard supplier</button>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px;background:var(--surface)">
+        <div style="display:grid;grid-template-columns:1fr 260px;gap:16px;margin-bottom:16px">
+
+          <!-- SUPPLIER TABLE -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border)">
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Supplier</div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Category</div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">AI Score</div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">On-time %</div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Status</div>
+              <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;text-align:right">Action</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#1565A8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">CI</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">Caspian Industrial</div><div style="font-size:11px;color:var(--muted)">Valves · MRO</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">Valves</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#1A7A4A;border-radius:2px;width:94%"></div></div><span style="font-size:12px;font-weight:600;color:#1A7A4A">94</span></div>
+              <div style="font-size:12px;color:var(--ink2)">97%</div>
+              <div><span class="status-pill sp-active">Preferred</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#1A7A4A;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">TK</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">TechnoKaz Supply</div><div style="font-size:11px;color:var(--muted)">MRO · Mechanical</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">MRO</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#1A7A4A;border-radius:2px;width:88%"></div></div><span style="font-size:12px;font-weight:600;color:#1A7A4A">88</span></div>
+              <div style="font-size:12px;color:var(--ink2)">91%</div>
+              <div><span class="status-pill sp-active">Preferred</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#D4890A;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">GP</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">Gulf Parts Ltd</div><div style="font-size:11px;color:var(--muted)">Valves · Fittings</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">Valves</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#D4890A;border-radius:2px;width:76%"></div></div><span style="font-size:12px;font-weight:600;color:#D4890A">76</span></div>
+              <div style="font-size:12px;color:var(--ink2)">78%</div>
+              <div><span class="status-pill sp-warning">Active</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#C0392B;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">AJ</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">Al-Jabir Supply Co.</div><div style="font-size:11px;color:var(--muted)">Mechanical seals</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">Mechanical</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#C0392B;border-radius:2px;width:58%"></div></div><span style="font-size:12px;font-weight:600;color:#C0392B">58</span></div>
+              <div style="font-size:12px;color:var(--ink2)">68%</div>
+              <div><span class="status-pill sp-risk">Review</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#7B61BD;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">BS</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">BakuSpares LLC</div><div style="font-size:11px;color:var(--muted)">Consumables</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">Consumables</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#1A7A4A;border-radius:2px;width:82%"></div></div><span style="font-size:12px;font-weight:600;color:#1A7A4A">82</span></div>
+              <div style="font-size:12px;color:var(--ink2)">89%</div>
+              <div><span class="status-pill sp-active">Preferred</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px 80px;padding:11px 16px;align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+              <div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;border-radius:50%;background:#04263F;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">ET</div><div><div style="font-size:12.5px;font-weight:500;color:var(--ink)">Euro-Tech Azerbaijan</div><div style="font-size:11px;color:var(--muted)">Electrical · Inst.</div></div></div>
+              <div style="font-size:11.5px;color:var(--muted)">Electrical</div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:40px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#D4890A;border-radius:2px;width:79%"></div></div><span style="font-size:12px;font-weight:600;color:#D4890A">79</span></div>
+              <div style="font-size:12px;color:var(--ink2)">85%</div>
+              <div><span class="status-pill sp-warning">Active</span></div>
+              <div style="font-size:11px;color:var(--blue);font-weight:500;cursor:pointer;text-align:right">Profile</div>
+            </div>
+          </div>
+
+          <!-- RADAR CHART -->
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px">
+            <div class="side-label">Supplier comparison</div>
+            <svg id="radarSvg" viewBox="0 0 240 220" width="100%" style="display:block"></svg>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;background:#1565A8;border-radius:1px"></div><span style="font-size:10px;color:var(--muted2)">Caspian Industrial</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;background:#1A7A4A;border-radius:1px"></div><span style="font-size:10px;color:var(--muted2)">TechnoKaz</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;background:#D4890A;border-radius:1px"></div><span style="font-size:10px;color:var(--muted2)">Gulf Parts</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI INSIGHT BANNER -->
+        <div style="background:var(--navy);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F4B72A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <div style="flex:1">
+            <div style="font-size:11px;font-weight:600;color:#F4B72A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">AI Supplier Intelligence</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.75)">Al-Jabir Supply Co. has dropped below the 60-point threshold. AI recommends sourcing alternatives for mechanical seals before next RFQ cycle. 2 qualified backups identified.</div>
+          </div>
+          <button style="background:#F4B72A;color:#04263F;border:none;padding:7px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Review alternatives</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div><!-- /panel-suppliers -->
+
+<!-- ============================================================ RFQ CENTER TAB -->
+<div id="panel-rfq" class="tab-panel" style="display:none;flex-direction:column;flex:1">
+  <div class="shell" style="min-height:calc(100vh - 52px)">
+    <aside>
+      <div class="aside-section">
+        <div class="aside-label">Status</div>
+        <button class="aside-item active">All RFQs <span class="aside-badge">21</span></button>
+        <button class="aside-item">Draft <span class="aside-badge" style="background:var(--muted)">4</span></button>
+        <button class="aside-item">Sent <span class="aside-badge">9</span></button>
+        <button class="aside-item">Response received <span class="aside-badge" style="background:#1A7A4A">6</span></button>
+        <button class="aside-item">Overdue <span class="aside-badge red">2</span></button>
+      </div>
+      <div class="aside-divider"></div>
+      <div class="aside-section">
+        <div class="aside-label">By project</div>
+        <button class="aside-item">AIOC Turnaround</button>
+        <button class="aside-item">Shah Deniz Phase 3</button>
+        <button class="aside-item">Absheron</button>
+        <button class="aside-item">Offshore MRO</button>
+      </div>
+    </aside>
+    <main style="display:flex;flex-direction:column">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">RFQ Center</div>
+          <div class="topbar-subtitle">21 RFQs · 2 overdue · 6 responses pending review</div>
+        </div>
+        <div class="topbar-right">
+          <button class="tb-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter
+          </button>
+          <button class="tb-primary">+ Create RFQ</button>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px;background:var(--surface)">
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:16px">
+
+          <!-- RFQ LIST -->
+          <div>
+            <div style="background:var(--red-lt);border:1px solid #F5C0BB;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div style="flex:1;font-size:12px;color:var(--red);font-weight:500">2 RFQs are overdue. AI has auto-sent reminders to Gulf Parts Ltd and Al-Jabir Supply Co.</div>
+              <span style="font-size:11px;color:var(--red);cursor:pointer;font-weight:600;text-decoration:underline">Review &#8594;</span>
+            </div>
+            <div class="proj-table fade-in">
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--border)">
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Item / Project</div>
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Supplier</div>
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Sent</div>
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Deadline</div>
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Status</div>
+                <div style="font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;text-align:right">Act</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Ball valves 2&quot; &#8212; 40 units</div><div style="font-size:11px;color:var(--muted)">AIOC</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">TechnoKaz Supply</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 19</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 24</div>
+                <div><span class="rfq-status rfq-rcvd">Response rcvd</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Compare</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Mechanical seals &#8212; 120 units</div><div style="font-size:11px;color:var(--muted)">Shah Deniz</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">3 suppliers</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 20</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 25</div>
+                <div><span class="rfq-status rfq-sent">Awaiting</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Follow up</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">E&amp;I cable trays &#8212; bulk</div><div style="font-size:11px;color:var(--muted)">Absheron</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">Gulf Parts Ltd</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 15</div>
+                <div style="font-size:11px;color:var(--red)">Apr 20</div>
+                <div><span class="rfq-status rfq-over">Overdue</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Remind</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Bearing assemblies &#8212; 18 sets</div><div style="font-size:11px;color:var(--muted)">Offshore MRO</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">Caspian Industrial</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 21</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 27</div>
+                <div><span class="rfq-status rfq-sent">Awaiting</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">View</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Gate valves 4&quot; &#8212; 12 units</div><div style="font-size:11px;color:var(--muted)">AIOC</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">BakuSpares LLC</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 21</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 26</div>
+                <div><span class="rfq-status rfq-rcvd">Response rcvd</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Compare</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Pump impellers &#8212; 6 units</div><div style="font-size:11px;color:var(--muted)">Shah Deniz</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">Al-Jabir Supply</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 12</div>
+                <div style="font-size:11px;color:var(--red)">Apr 18</div>
+                <div><span class="rfq-status rfq-over">Overdue</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Remind</div>
+              </div>
+              <div style="display:grid;grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 70px;padding:11px 16px;align-items:center;cursor:pointer" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background=''">
+                <div><div style="font-size:12px;font-weight:500;color:var(--ink)">Instrument cables &#8212; 500m</div><div style="font-size:11px;color:var(--muted)">Absheron</div></div>
+                <div style="font-size:11.5px;color:var(--ink2)">Euro-Tech AZ</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 22</div>
+                <div style="font-size:11px;color:var(--muted)">Apr 28</div>
+                <div><span class="rfq-status rfq-sent">Draft</span></div>
+                <div style="font-size:11px;color:var(--blue);font-weight:500;text-align:right;cursor:pointer">Send</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RFQ DETAIL PANEL -->
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="background:var(--navy);border-radius:10px;padding:14px">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F4B72A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span style="font-size:11px;font-weight:600;color:#F4B72A;text-transform:uppercase;letter-spacing:0.04em">AI Draft Assist</span>
+              </div>
+              <div style="font-size:11.5px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:10px">Based on historical RFQs, AI has pre-filled specs for "Mechanical seals — 120 units" matching Shah Deniz requirements. Review and send in one click.</div>
+              <button style="background:#F4B72A;color:#04263F;border:none;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Review AI draft &#8594;</button>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+              <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+                <div class="side-label" style="margin-bottom:0">Bid comparison &#8212; Ball valves 2&quot;</div>
+              </div>
+              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+                <div style="padding:10px;border-radius:8px;border:1px solid var(--blue);background:var(--blue-lt)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                    <span style="font-size:12px;font-weight:500;color:var(--ink)">TechnoKaz Supply</span>
+                    <span style="font-size:10px;background:var(--blue);color:#fff;padding:1px 6px;border-radius:8px;font-weight:600">AI pick</span>
+                  </div>
+                  <div style="display:flex;gap:12px">
+                    <span style="font-size:11px;color:var(--muted)">Price: <strong style="color:var(--ink)">$8,400</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Lead: <strong style="color:var(--ink)">14 days</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Score: <strong style="color:var(--ink)">88</strong></span>
+                  </div>
+                </div>
+                <div style="padding:10px;border-radius:8px;border:1px solid var(--border)">
+                  <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">BakuSpares LLC</div>
+                  <div style="display:flex;gap:12px">
+                    <span style="font-size:11px;color:var(--muted)">Price: <strong style="color:var(--ink)">$9,100</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Lead: <strong style="color:var(--ink)">12 days</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Score: <strong style="color:var(--ink)">82</strong></span>
+                  </div>
+                </div>
+                <div style="padding:10px;border-radius:8px;border:1px solid var(--border)">
+                  <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:4px">Caspian Industrial</div>
+                  <div style="display:flex;gap:12px">
+                    <span style="font-size:11px;color:var(--muted)">Price: <strong style="color:var(--ink)">$7,900</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Lead: <strong style="color:var(--ink)">18 days</strong></span>
+                    <span style="font-size:11px;color:var(--muted)">Score: <strong style="color:var(--ink)">94</strong></span>
+                  </div>
+                </div>
+                <button style="width:100%;background:var(--navy);color:#fff;border:none;padding:8px;border-radius:7px;font-size:11.5px;font-weight:500;cursor:pointer;font-family:var(--font-body)">Issue PO to TechnoKaz &#8594;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div><!-- /panel-rfq -->
+
+<!-- ============================================================ ANALYTICS TAB -->
+<div id="panel-analytics" class="tab-panel" style="display:none;flex-direction:column;flex:1">
+  <main style="display:flex;flex-direction:column;flex:1">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">Analytics</div>
+        <div class="topbar-subtitle">Spend intelligence · supplier performance · savings tracking</div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-chip">Last 12 months &#9660;</button>
+        <button class="tb-chip">All projects &#9660;</button>
+        <button class="tb-primary">Export report</button>
+      </div>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">Total spend managed</div>
+        <div class="kpi-val">$5.8M</div>
+        <span class="kpi-delta up">&#9650; 23% YoY</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">AI-driven savings</div>
+        <div class="kpi-val">$284K</div>
+        <span class="kpi-delta up">&#9650; 18% vs target</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Avg. RFQ cycle time</div>
+        <div class="kpi-val">4.2d</div>
+        <span class="kpi-delta up">&#9660; 1.8d faster</span>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Supplier on-time rate</div>
+        <div class="kpi-val">91.4%</div>
+        <span class="kpi-delta warn">Target: 95%</span>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:20px;background:var(--surface)">
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">
+        <!-- SPEND TREND -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div class="section-hd">
+            <div class="section-title">Monthly spend (USD $K)</div>
+            <span class="section-action">Breakdown</span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:5px;height:120px;padding:0 2px" id="analyticsChart"></div>
+          <div style="display:flex;justify-content:space-around;margin-top:5px">
+            <span style="font-size:10px;color:var(--muted2)">May</span><span style="font-size:10px;color:var(--muted2)">Jun</span><span style="font-size:10px;color:var(--muted2)">Jul</span><span style="font-size:10px;color:var(--muted2)">Aug</span><span style="font-size:10px;color:var(--muted2)">Sep</span><span style="font-size:10px;color:var(--muted2)">Oct</span><span style="font-size:10px;color:var(--muted2)">Nov</span><span style="font-size:10px;color:var(--muted2)">Dec</span><span style="font-size:10px;color:var(--muted2)">Jan</span><span style="font-size:10px;color:var(--muted2)">Feb</span><span style="font-size:10px;color:var(--muted2)">Mar</span><span style="font-size:10px;color:var(--muted2)">Apr</span>
+          </div>
+        </div>
+        <!-- SPEND BY CATEGORY -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div class="section-title" style="margin-bottom:14px">Spend by category</div>
+          <svg viewBox="0 0 140 140" width="100%" style="max-height:130px;display:block">
+            <circle cx="70" cy="70" r="48" fill="none" stroke="#E4F0FB" stroke-width="22"/>
+            <circle cx="70" cy="70" r="48" fill="none" stroke="#1565A8" stroke-width="22" stroke-dasharray="90 212" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="48" fill="none" stroke="#1A7A4A" stroke-width="22" stroke-dasharray="60 212" stroke-dashoffset="-90" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="48" fill="none" stroke="#D4890A" stroke-width="22" stroke-dasharray="40 212" stroke-dashoffset="-150" transform="rotate(-90 70 70)"/>
+            <circle cx="70" cy="70" r="48" fill="none" stroke="#7B61BD" stroke-width="22" stroke-dasharray="22 212" stroke-dashoffset="-190" transform="rotate(-90 70 70)"/>
+            <text x="70" y="68" text-anchor="middle" font-family="Syne,sans-serif" font-size="14" font-weight="700" fill="#0E1E2C">$5.8M</text>
+            <text x="70" y="82" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#637080">total</text>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:8px">
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#1565A8;flex-shrink:0"></div><span style="font-size:10.5px;color:var(--muted2);flex:1">Valves &amp; Fittings</span><span style="font-size:10.5px;font-weight:600;color:var(--ink2)">42%</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#1A7A4A;flex-shrink:0"></div><span style="font-size:10.5px;color:var(--muted2);flex:1">MRO / Spares</span><span style="font-size:10.5px;font-weight:600;color:var(--ink2)">28%</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#D4890A;flex-shrink:0"></div><span style="font-size:10.5px;color:var(--muted2);flex:1">Electrical &amp; Inst.</span><span style="font-size:10.5px;font-weight:600;color:var(--ink2)">19%</span></div>
+            <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#7B61BD;flex-shrink:0"></div><span style="font-size:10.5px;color:var(--muted2);flex:1">Consumables</span><span style="font-size:10.5px;font-weight:600;color:var(--ink2)">11%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <!-- SUPPLIER PERFORMANCE -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div class="section-title" style="margin-bottom:14px">Supplier performance</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:24px;height:24px;border-radius:50%;background:#1565A8;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0">CI</div><div style="flex:1"><div style="font-size:11.5px;font-weight:500;color:var(--ink);margin-bottom:3px">Caspian Industrial</div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#1565A8;border-radius:2px;width:97%"></div></div></div><span style="font-size:11px;font-weight:600;color:#1565A8;width:32px;text-align:right">97%</span></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:24px;height:24px;border-radius:50%;background:#1A7A4A;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0">TK</div><div style="flex:1"><div style="font-size:11.5px;font-weight:500;color:var(--ink);margin-bottom:3px">TechnoKaz Supply</div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#1A7A4A;border-radius:2px;width:91%"></div></div></div><span style="font-size:11px;font-weight:600;color:#1A7A4A;width:32px;text-align:right">91%</span></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:24px;height:24px;border-radius:50%;background:#D4890A;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0">GP</div><div style="flex:1"><div style="font-size:11.5px;font-weight:500;color:var(--ink);margin-bottom:3px">Gulf Parts Ltd</div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#D4890A;border-radius:2px;width:78%"></div></div></div><span style="font-size:11px;font-weight:600;color:#D4890A;width:32px;text-align:right">78%</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:24px;height:24px;border-radius:50%;background:#C0392B;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0">AJ</div><div style="flex:1"><div style="font-size:11.5px;font-weight:500;color:var(--ink);margin-bottom:3px">Al-Jabir</div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:4px;background:#C0392B;border-radius:2px;width:68%"></div></div></div><span style="font-size:11px;font-weight:600;color:#C0392B;width:32px;text-align:right">68%</span></div>
+        </div>
+
+        <!-- SAVINGS TRACKER -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div class="section-title" style="margin-bottom:14px">AI savings tracker</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;color:var(--ink2)">Order consolidation</span><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--ink)">$84,200</div><div style="font-size:10px;color:var(--green)">+29% vs manual</div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;color:var(--ink2)">Preferred supplier routing</span><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--ink)">$72,500</div><div style="font-size:10px;color:var(--green)">+18% vs manual</div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;color:var(--ink2)">Auto-negotiation assists</span><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--ink)">$61,300</div><div style="font-size:10px;color:var(--green)">+14% vs manual</div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;color:var(--ink2)">Early payment discounts</span><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--ink)">$41,000</div><div style="font-size:10px;color:var(--green)">+8% vs manual</div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;color:var(--ink2)">Duplicate PO prevention</span><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--ink)">$25,000</div><div style="font-size:10px;color:var(--green)">+5% vs manual</div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0 0">
+            <span style="font-size:12px;font-weight:600;color:var(--ink)">Total AI savings</span>
+            <span style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--green)">$284K</span>
+          </div>
+        </div>
+
+        <!-- CYCLE TIME -->
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px">
+          <div class="section-title" style="margin-bottom:14px">RFQ cycle time (days)</div>
+          <div style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;color:var(--muted)">Draft to send</span><span style="font-size:12px;font-weight:600;color:var(--ink)">0.8d</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:6px;background:#1A7A4A;border-radius:3px;width:16%"></div></div></div>
+          <div style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;color:var(--muted)">Send to response</span><span style="font-size:12px;font-weight:600;color:var(--ink)">3.4d</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:6px;background:#1565A8;border-radius:3px;width:68%"></div></div></div>
+          <div style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;color:var(--muted)">Review to PO</span><span style="font-size:12px;font-weight:600;color:var(--ink)">1.2d</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:6px;background:#7B61BD;border-radius:3px;width:24%"></div></div></div>
+          <div style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:11.5px;color:var(--muted)">PO to delivery</span><span style="font-size:12px;font-weight:600;color:var(--ink)">18.0d</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:6px;background:#D4890A;border-radius:3px;width:72%"></div></div></div>
+          <div style="margin-top:14px;padding:10px;background:var(--green-lt);border-radius:8px;text-align:center">
+            <div style="font-size:10px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:0.04em">Average total cycle</div>
+            <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--green)">4.2 days</div>
+            <div style="font-size:10px;color:var(--green)">1.8 days faster than industry avg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div><!-- /panel-analytics -->
 
 <script>
 function switchTab(el, tab) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  const panel = document.getElementById('panel-' + tab);
+  if (panel) panel.style.display = 'flex';
 }
 
 function selectRow(el) {
@@ -638,6 +1224,79 @@ spendData.forEach((v, i) => {
   bar.title = '$' + v + 'K';
   chart.appendChild(bar);
 });
+
+// Analytics chart
+const aData = [180,240,310,290,380,420,395,460,510,490,560,610];
+const aMax = Math.max(...aData);
+const aChart = document.getElementById('analyticsChart');
+if (aChart) {
+  aData.forEach((v,i) => {
+    const bar = document.createElement('div');
+    bar.style.cssText = `flex:1;border-radius:4px 4px 0 0;background:${i===aData.length-1?'#1565A8':'#B5D4F4'};height:${Math.round((v/aMax)*120)}px;cursor:pointer;transition:opacity 0.2s`;
+    bar.title = '$'+v+'K';
+    bar.onmouseenter = () => bar.style.opacity='0.75';
+    bar.onmouseleave = () => bar.style.opacity='1';
+    aChart.appendChild(bar);
+  });
+}
+
+// Supplier radar chart (SVG)
+function drawRadar() {
+  const svg = document.getElementById('radarSvg');
+  if (!svg) return;
+  const cx=120,cy=110,r=80;
+  const labels=['Quality','Delivery','Price','Compliance','Capacity','Support'];
+  const suppliers=[
+    {name:'Caspian Industrial',color:'#1565A8',vals:[0.94,0.91,0.82,0.95,0.88,0.90]},
+    {name:'TechnoKaz',color:'#1A7A4A',vals:[0.88,0.84,0.90,0.80,0.75,0.82]},
+    {name:'Gulf Parts',color:'#D4890A',vals:[0.76,0.70,0.88,0.72,0.80,0.65]},
+  ];
+  const n=labels.length;
+  const angle=i=>((i/n)*2*Math.PI)-Math.PI/2;
+  // grid
+  [0.25,0.5,0.75,1.0].forEach(scale=>{
+    let pts=labels.map((_,i)=>{
+      const a=angle(i);
+      return `${cx+r*scale*Math.cos(a)},${cy+r*scale*Math.sin(a)}`;
+    }).join(' ');
+    const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points',pts);
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke','#D8E4EE');
+    poly.setAttribute('stroke-width','1');
+    svg.appendChild(poly);
+  });
+  // axes + labels
+  labels.forEach((_,i)=>{
+    const a=angle(i);
+    const x2=cx+r*Math.cos(a),y2=cy+r*Math.sin(a);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx);line.setAttribute('y1',cy);line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+    line.setAttribute('stroke','#D8E4EE');line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const tx=cx+(r+18)*Math.cos(a),ty=cy+(r+18)*Math.sin(a);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',tx);t.setAttribute('y',ty+4);
+    t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.setAttribute('fill','#637080');
+    t.setAttribute('font-family','DM Sans, sans-serif');
+    t.textContent=labels[i];
+    svg.appendChild(t);
+  });
+  // supplier shapes
+  suppliers.forEach(s=>{
+    let pts=s.vals.map((v,i)=>{
+      const a=angle(i);
+      return `${cx+r*v*Math.cos(a)},${cy+r*v*Math.sin(a)}`;
+    }).join(' ');
+    const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points',pts);
+    poly.setAttribute('fill',s.color+'22');
+    poly.setAttribute('stroke',s.color);
+    poly.setAttribute('stroke-width','1.5');
+    svg.appendChild(poly);
+  });
+}
+drawRadar();
 </script>
 </body>
 </html>
