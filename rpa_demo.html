@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RPA Demo — Login & Extract Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161921;
+    --surface2: #1e2230;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --accent: #4f8ef7;
+    --accent-bg: rgba(79,142,247,0.1);
+    --accent-border: rgba(79,142,247,0.3);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.1);
+    --green-border: rgba(52,211,153,0.3);
+    --amber: #fbbf24;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .card-body {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+  }
+
+  .steps-panel {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1.25rem;
+  }
+
+  .steps-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+    color: var(--muted);
+    background: var(--surface2);
+    transition: all 0.3s;
+  }
+
+  .dot.active {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-color: var(--accent-border);
+    box-shadow: 0 0 0 3px rgba(79,142,247,0.08);
+  }
+
+  .dot.done {
+    background: var(--green-bg);
+    color: var(--green);
+    border-color: var(--green-border);
+  }
+
+  .slabel {
+    font-size: 12.5px;
+    color: var(--muted);
+    padding-top: 4px;
+    line-height: 1.4;
+    transition: color 0.3s;
+  }
+
+  .slabel.active { color: var(--text); font-weight: 500; }
+  .slabel.done { color: var(--green); }
+
+  .screen-panel {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .browser-mock {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .browser-bar {
+    background: rgba(0,0,0,0.2);
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .browser-dots { display: flex; gap: 5px; }
+  .bd { width: 9px; height: 9px; border-radius: 50%; }
+
+  .url-bar {
+    flex: 1;
+    background: rgba(0,0,0,0.25);
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s;
+  }
+
+  .page-content { padding: 18px; min-height: 220px; }
+
+  .login-form { max-width: 260px; margin: 0 auto; }
+  .login-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .lfield { margin-bottom: 11px; }
+  .lfield label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+
+  .lfield input {
+    width: 100%;
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    background: rgba(0,0,0,0.2);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .lfield input.typing {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: #a8c8ff;
+  }
+
+  .lfield input.filled {
+    border-color: var(--green-border);
+    background: var(--green-bg);
+    color: var(--green);
+  }
+
+  .lbtn {
+    width: 100%;
+    padding: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    border-radius: 7px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s;
+  }
+
+  .lbtn.clicking { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+  .lbtn.success { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+
+  .dashboard { display: none; }
+
+  .dash-nav {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .nav-item {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: rgba(0,0,0,0.15);
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .nav-item.active-nav {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .dash-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .report-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .rep-item {
+    padding: 8px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(0,0,0,0.15);
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .rep-item.highlight-rep { border-color: var(--accent-border); background: var(--accent-bg); color: var(--accent); }
+
+  .report-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+  .report-table th { text-align: left; padding: 5px 8px; font-size: 11px; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+  .report-table td { padding: 6px 8px; color: var(--text); border-bottom: 1px solid var(--border); transition: background 0.3s; }
+  .report-table tr.row-hl td { background: rgba(79,142,247,0.08); }
+  .report-table tr.row-done td { background: rgba(52,211,153,0.08); color: var(--green); }
+
+  .export-row { display: flex; gap: 7px; margin-top: 10px; }
+  .export-btn {
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Mono', monospace;
+  }
+  .export-btn.clicking { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+
+  .result-card {
+    display: none;
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+
+  .result-card .rc-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rc-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #0d0f14; font-weight: 700;
+  }
+
+  .rc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+  .rc-row { font-size: 12px; }
+  .rc-row span:first-child { color: var(--muted); display: block; font-size: 11px; margin-bottom: 1px; font-family: 'DM Mono', monospace; }
+  .rc-row span:last-child { color: var(--text); }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.15);
+    border-top: 1px solid var(--border);
+  }
+
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .status-dot.running { background: var(--accent); animation: pulse 1s infinite; }
+  .status-dot.done { background: var(--green); animation: none; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .status-text { font-size: 12.5px; color: var(--muted); font-family: 'DM Mono', monospace; flex: 1; }
+  .status-text b { color: var(--accent); font-weight: 500; }
+  .status-text.done-text b { color: var(--green); }
+
+  .btn-row { display: flex; gap: 10px; padding: 14px; border-top: 1px solid var(--border); }
+
+  .run-btn {
+    padding: 8px 22px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .run-btn:hover { background: rgba(79,142,247,0.18); }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .reset-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { background: var(--surface2); color: var(--text); }
+
+  .footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  @media (max-width: 600px) {
+    .card-body { grid-template-columns: 1fr; }
+    .steps-panel { border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
+    .rc-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="badge">RPA Demo</div>
+    <h1>Logging in & <span>extracting reports</span></h1>
+    <p class="subtitle">Watch the bot automatically sign in, navigate to reports, extract data rows, and export to Excel — zero human input.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="steps-panel">
+        <div class="steps-label">Bot steps</div>
+        <div class="step-item"><div class="dot" id="d1">1</div><div class="slabel" id="dl1">Open login page</div></div>
+        <div class="step-item"><div class="dot" id="d2">2</div><div class="slabel" id="dl2">Enter username</div></div>
+        <div class="step-item"><div class="dot" id="d3">3</div><div class="slabel" id="dl3">Enter password</div></div>
+        <div class="step-item"><div class="dot" id="d4">4</div><div class="slabel" id="dl4">Click sign in</div></div>
+        <div class="step-item"><div class="dot" id="d5">5</div><div class="slabel" id="dl5">Navigate to reports</div></div>
+        <div class="step-item"><div class="dot" id="d6">6</div><div class="slabel" id="dl6">Select sales report</div></div>
+        <div class="step-item"><div class="dot" id="d7">7</div><div class="slabel" id="dl7">Extract data rows</div></div>
+        <div class="step-item"><div class="dot" id="d8">8</div><div class="slabel" id="dl8">Export to Excel</div></div>
+      </div>
+
+      <div class="screen-panel">
+        <div class="browser-mock">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <div class="bd" style="background:#f09595;"></div>
+              <div class="bd" style="background:#ef9f27;"></div>
+              <div class="bd" style="background:#97c459;"></div>
+            </div>
+            <div class="url-bar" id="url-bar">https://reports.acmecorp.com/login</div>
+          </div>
+          <div class="page-content">
+            <div id="login-screen">
+              <div class="login-form">
+                <div class="login-title">Sign in to Acme Reports</div>
+                <div class="lfield"><label>Username</label><input type="text" id="f-user" placeholder="username" readonly /></div>
+                <div class="lfield"><label>Password</label><input type="password" id="f-pass" placeholder="password" readonly /></div>
+                <button class="lbtn" id="signin-btn">Sign in</button>
+              </div>
+            </div>
+            <div id="dashboard-screen" class="dashboard">
+              <div class="dash-nav">
+                <div class="nav-item" id="nav-home">Home</div>
+                <div class="nav-item" id="nav-reports">Reports</div>
+                <div class="nav-item">Settings</div>
+              </div>
+              <div id="report-area">
+                <div class="dash-title">Welcome, admin</div>
+                <p style="font-size:13px;color:var(--muted);">Select a section from the navigation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-card" id="result-card">
+          <div class="rc-title"><div class="rc-check">✓</div> Data extracted &amp; saved successfully</div>
+          <div class="rc-grid">
+            <div class="rc-row"><span>File</span><span>Sales_Report_April2026.xlsx</span></div>
+            <div class="rc-row"><span>Rows extracted</span><span>4 records</span></div>
+            <div class="rc-row"><span>Total revenue</span><span>$287,500</span></div>
+            <div class="rc-row"><span>Completed at</span><span id="done-time">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <div class="status-dot" id="status-dot"></div>
+      <div class="status-text" id="status-text">Press <b>Run bot</b> to start the automation.</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="run-btn" id="run-btn" onclick="runBot()">Run bot</button>
+      <button class="reset-btn" id="reset-btn" onclick="resetBot()" disabled>Reset</button>
+    </div>
+  </div>
+
+  <div class="footer">Built with RPA concepts &mdash; automate the repetitive, focus on what matters.</div>
+</div>
+
+<script>
+let running = false;
+const reportRows = [
+  ['North region','Q1 2026','$92,000'],
+  ['South region','Q1 2026','$78,500'],
+  ['East region','Q1 2026','$64,000'],
+  ['West region','Q1 2026','$53,000'],
+];
+
+function setStep(n, state) {
+  document.getElementById('d'+n).className = 'dot ' + state;
+  document.getElementById('dl'+n).className = 'slabel ' + state;
+}
+
+function setStatus(msg, state) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  dot.className = 'status-dot ' + (state || 'running');
+  txt.className = 'status-text' + (state === 'done' ? ' done-text' : '');
+  txt.innerHTML = msg;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function typeInto(id, text, masked) {
+  return new Promise(resolve => {
+    const el = document.getElementById(id);
+    el.className = 'typing';
+    let i = 0;
+    const iv = setInterval(() => {
+      i++;
+      el.value = masked ? '•'.repeat(i) : text.slice(0, i);
+      if (i >= text.length) { clearInterval(iv); el.className = 'filled'; resolve(); }
+    }, 65);
+  });
+}
+
+async function runBot() {
+  if (running) return;
+  running = true;
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('reset-btn').disabled = true;
+
+  setStep(1,'active'); setStatus('<b>Bot:</b> Opening login page...');
+  await sleep(800); setStep(1,'done');
+
+  setStep(2,'active'); setStatus('<b>Bot:</b> Entering username...');
+  await typeInto('f-user','admin@acmecorp.com', false);
+  await sleep(300); setStep(2,'done');
+
+  setStep(3,'active'); setStatus('<b>Bot:</b> Entering password...');
+  await typeInto('f-pass','Secure@2026', true);
+  await sleep(300); setStep(3,'done');
+
+  setStep(4,'active'); setStatus('<b>Bot:</b> Clicking sign in...');
+  const btn = document.getElementById('signin-btn');
+  btn.className = 'lbtn clicking'; btn.textContent = 'Signing in...';
+  await sleep(900);
+  btn.className = 'lbtn success'; btn.textContent = 'Signed in!';
+  await sleep(400);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard-screen').style.display = 'block';
+  document.getElementById('url-bar').textContent = 'https://reports.acmecorp.com/dashboard';
+  setStep(4,'done');
+
+  setStep(5,'active'); setStatus('<b>Bot:</b> Navigating to Reports...');
+  await sleep(700);
+  document.getElementById('nav-reports').className = 'nav-item active-nav';
+  document.getElementById('url-bar').textContent = 'https://reports.acmecorp.com/reports';
+  document.getElementById('report-area').innerHTML = `
+    <div class="dash-title">Available reports</div>
+    <div class="report-list">
+      <div class="rep-item" id="rep-sales">Sales summary report</div>
+      <div class="rep-item">HR headcount report</div>
+      <div class="rep-item">Finance expense report</div>
+    </div>`;
+  setStep(5,'done');
+
+  setStep(6,'active'); setStatus('<b>Bot:</b> Opening sales summary report...');
+  await sleep(700);
+  const salesEl = document.getElementById('rep-sales');
+  if (salesEl) salesEl.className = 'rep-item highlight-rep';
+  await sleep(500);
+  document.getElementById('url-bar').textContent = 'https://reports.acmecorp.com/reports/sales';
+  document.getElementById('report-area').innerHTML = `
+    <div class="dash-title">Sales summary — Q1 2026</div>
+    <table class="report-table">
+      <thead><tr><th>Region</th><th>Period</th><th>Revenue</th></tr></thead>
+      <tbody id="rtbody">
+        ${reportRows.map((r,i)=>`<tr id="row${i}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="export-row">
+      <button class="export-btn" id="excel-btn">Export to Excel</button>
+      <button class="export-btn">Export to CSV</button>
+      <button class="export-btn">Print</button>
+    </div>`;
+  setStep(6,'done');
+
+  setStep(7,'active'); setStatus('<b>Bot:</b> Extracting data rows...');
+  for (let i = 0; i < reportRows.length; i++) {
+    const row = document.getElementById('row'+i);
+    if (row) row.className = 'row-hl';
+    await sleep(380);
+    if (row) row.className = 'row-done';
+  }
+  setStep(7,'done');
+
+  setStep(8,'active'); setStatus('<b>Bot:</b> Exporting to Excel...');
+  await sleep(500);
+  const exBtn = document.getElementById('excel-btn');
+  if (exBtn) { exBtn.className = 'export-btn clicking'; exBtn.textContent = 'Exporting...'; }
+  await sleep(800);
+  if (exBtn) exBtn.textContent = 'Exported!';
+  setStep(8,'done');
+
+  const now = new Date();
+  document.getElementById('done-time').textContent = now.toLocaleTimeString();
+  document.getElementById('result-card').style.display = 'block';
+  setStatus('<b>Done!</b> All 8 steps completed. Report saved automatically.', 'done');
+  document.getElementById('reset-btn').disabled = false;
+  running = false;
+}
+
+function resetBot() {
+  [1,2,3,4,5,6,7,8].forEach(n => setStep(n,''));
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('dashboard-screen').style.display = 'none';
+  ['f-user','f-pass'].forEach(id => { const el = document.getElementById(id); el.value=''; el.className=''; });
+  const btn = document.getElementById('signin-btn');
+  btn.className = 'lbtn'; btn.textContent = 'Sign in';
+  document.getElementById('url-bar').textContent = 'https://reports.acmecorp.com/login';
+  document.getElementById('result-card').style.display = 'none';
+  const dot = document.getElementById('status-dot');
+  dot.className = 'status-dot';
+  document.getElementById('status-text').innerHTML = 'Press <b>Run bot</b> to start the automation.';
+  document.getElementById('status-text').className = 'status-text';
+  document.getElementById('run-btn').disabled = false;
+  document.getElementById('reset-btn').disabled = true;
+}
+</script>
+</body>
+</html>
