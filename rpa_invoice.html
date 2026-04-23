@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RPA Demo — Invoice Data Entry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161921;
+    --surface2: #1e2230;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #7a7f94;
+    --accent: #4f8ef7;
+    --accent-bg: rgba(79,142,247,0.1);
+    --accent-border: rgba(79,142,247,0.3);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.1);
+    --green-border: rgba(52,211,153,0.3);
+    --amber: #fbbf24;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { width: 100%; max-width: 980px; margin: 0 auto; }
+
+  .header { text-align: center; margin-bottom: 2.5rem; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .steps-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .step-chip {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    background: var(--surface2);
+    transition: all 0.3s;
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .step-chip.chip-active { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); font-weight: 500; }
+  .step-chip.chip-done { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .panel-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    background: var(--surface2);
+  }
+
+  .panel-badge.active-badge {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  .panel-body { padding: 16px; }
+
+  .inv-field { margin-bottom: 8px; display: flex; gap: 8px; }
+  .inv-key { font-size: 11px; color: var(--muted); min-width: 96px; padding-top: 1px; font-family: 'DM Mono', monospace; }
+  .inv-val { font-size: 12.5px; color: var(--text); font-weight: 500; transition: all 0.25s; border-radius: 4px; padding: 0 4px; }
+  .inv-val.hl { background: var(--accent-bg); color: var(--accent); }
+
+  .inv-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+  .inv-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .inv-table th { text-align: left; color: var(--muted); padding: 4px 5px; border-bottom: 1px solid var(--border); font-weight: 500; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; }
+  .inv-table td { padding: 5px 5px; color: var(--text); border-bottom: 1px solid var(--border); transition: background 0.3s, color 0.3s; }
+  .inv-table tr.row-hl td { background: rgba(79,142,247,0.1); }
+  .inv-table tr.row-done td { background: rgba(52,211,153,0.08); color: var(--green); }
+
+  .form-label { display: block; font-size: 10px; color: var(--muted); margin-bottom: 3px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+  .form-input {
+    width: 100%;
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 6px 9px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    background: rgba(0,0,0,0.2);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.25s, background 0.25s, color 0.25s;
+  }
+  .form-input.typing { border-color: var(--accent); background: var(--accent-bg); color: #a8c8ff; }
+  .form-input.filled { border-color: var(--green-border); background: var(--green-bg); color: var(--green); }
+
+  .form-field { margin-bottom: 9px; }
+  .form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .line-entry {
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 11px;
+    margin-bottom: 8px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .line-entry.active-line { border-color: var(--accent-border); background: var(--accent-bg); }
+  .line-entry.done-line { border-color: var(--green-border); background: var(--green-bg); }
+  .line-entry-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+    transition: color 0.3s;
+  }
+  .line-entry.active-line .line-entry-label { color: var(--accent); }
+  .line-entry.done-line .line-entry-label { color: var(--green); }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .sum-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  .sum-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+  .sum-val { font-size: 20px; font-weight: 700; font-family: 'Syne', sans-serif; color: var(--text); }
+  .sum-val.green { color: var(--green); }
+  .sum-val.blue { color: var(--accent); }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .sdot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .sdot.running { background: var(--accent); animation: blink 1s infinite; }
+  .sdot.done { background: var(--green); animation: none; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .smsg { font-size: 12.5px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .smsg b { color: var(--accent); font-weight: 500; }
+  .smsg.done-msg b { color: var(--green); }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+
+  .run-btn {
+    padding: 10px 26px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    border-radius: 9px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-bg);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .run-btn:hover:not(:disabled) { background: rgba(79,142,247,0.2); }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .reset-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 9px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover:not(:disabled) { background: var(--surface2); color: var(--text); }
+  .reset-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .speed-row { display: flex; align-items: center; gap: 8px; }
+  .speed-row label { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .speed-row input[type=range] { width: 80px; accent-color: var(--accent); }
+  .speed-lbl { font-size: 12px; color: var(--accent); font-family: 'DM Mono', monospace; min-width: 42px; }
+
+  .saved-banner {
+    display: none;
+    margin-top: 10px;
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--green);
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 660px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .summary-row { grid-template-columns: 1fr 1fr; }
+    .form-row2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">RPA Demo</div>
+    <h1>Invoice <span>data entry</span> automation</h1>
+    <p class="subtitle">Watch the RPA bot read a supplier invoice and automatically fill every field in the accounting system — zero manual typing.</p>
+  </div>
+
+  <div class="top-bar">
+    <div class="steps-row" id="steps-row" style="margin:0;flex:1;">
+      <div class="step-chip" id="chip1">1. Read invoice</div>
+      <div class="step-chip" id="chip2">2. Enter vendor</div>
+      <div class="step-chip" id="chip3">3. Enter dates</div>
+      <div class="step-chip" id="chip4">4. Enter amounts</div>
+      <div class="step-chip" id="chip5">5. Line items</div>
+      <div class="step-chip" id="chip6">6. Validate &amp; save</div>
+    </div>
+    <div class="speed-row">
+      <label>Speed</label>
+      <input type="range" min="1" max="3" value="2" step="1" id="speed-slider" />
+      <span class="speed-lbl" id="speed-label">Normal</span>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Source invoice</span>
+        <span class="panel-badge">PDF / paper</span>
+      </div>
+      <div class="panel-body">
+        <div class="inv-field"><span class="inv-key">Invoice #</span><span class="inv-val" id="src-inv">INV-2026-0847</span></div>
+        <div class="inv-field"><span class="inv-key">Vendor</span><span class="inv-val" id="src-vendor">Apex Supplies Ltd.</span></div>
+        <div class="inv-field"><span class="inv-key">Vendor ID</span><span class="inv-val" id="src-vid">VND-00312</span></div>
+        <div class="inv-field"><span class="inv-key">Invoice date</span><span class="inv-val" id="src-date">2026-04-18</span></div>
+        <div class="inv-field"><span class="inv-key">Due date</span><span class="inv-val" id="src-due">2026-05-18</span></div>
+        <div class="inv-field"><span class="inv-key">PO number</span><span class="inv-val" id="src-po">PO-9921</span></div>
+        <hr class="inv-divider" />
+        <table class="inv-table">
+          <thead>
+            <tr><th>Description</th><th>Qty</th><th>Unit price</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <tr id="src-row0"><td>Office chairs</td><td>10</td><td>$89.00</td><td>$890.00</td></tr>
+            <tr id="src-row1"><td>Desk lamps</td><td>20</td><td>$34.50</td><td>$690.00</td></tr>
+            <tr id="src-row2"><td>Filing cabinets</td><td>5</td><td>$210.00</td><td>$1,050.00</td></tr>
+          </tbody>
+        </table>
+        <hr class="inv-divider" />
+        <div class="inv-field"><span class="inv-key">Subtotal</span><span class="inv-val" id="src-sub">$2,630.00</span></div>
+        <div class="inv-field"><span class="inv-key">Tax (10%)</span><span class="inv-val" id="src-tax">$263.00</span></div>
+        <div class="inv-field"><span class="inv-key">Total due</span><span class="inv-val" id="src-total" style="font-size:14px;color:#fff;">$2,893.00</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Accounting system — ERP</span>
+        <span class="panel-badge active-badge">Data entry</span>
+      </div>
+      <div class="panel-body">
+        <div class="form-row2">
+          <div class="form-field"><label class="form-label">Invoice number</label><input class="form-input" id="f-inv" placeholder="—" readonly /></div>
+          <div class="form-field"><label class="form-label">PO number</label><input class="form-input" id="f-po" placeholder="—" readonly /></div>
+        </div>
+        <div class="form-row2">
+          <div class="form-field"><label class="form-label">Vendor name</label><input class="form-input" id="f-vendor" placeholder="—" readonly /></div>
+          <div class="form-field"><label class="form-label">Vendor ID</label><input class="form-input" id="f-vid" placeholder="—" readonly /></div>
+        </div>
+        <div class="form-row2">
+          <div class="form-field"><label class="form-label">Invoice date</label><input class="form-input" id="f-date" placeholder="—" readonly /></div>
+          <div class="form-field"><label class="form-label">Due date</label><input class="form-input" id="f-due" placeholder="—" readonly /></div>
+        </div>
+        <div class="form-row2">
+          <div class="form-field"><label class="form-label">Subtotal</label><input class="form-input" id="f-sub" placeholder="—" readonly /></div>
+          <div class="form-field"><label class="form-label">Tax amount</label><input class="form-input" id="f-tax" placeholder="—" readonly /></div>
+        </div>
+        <div class="form-field"><label class="form-label">Total due</label><input class="form-input" id="f-total" placeholder="—" readonly style="font-weight:500;" /></div>
+
+        <div style="font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 7px;">Line items</div>
+
+        <div class="line-entry" id="line0">
+          <div class="line-entry-label">Line 1</div>
+          <div class="form-row2">
+            <div class="form-field" style="margin:0;"><label class="form-label">Description</label><input class="form-input" id="f-l0d" placeholder="—" readonly /></div>
+            <div class="form-row2" style="gap:6px;">
+              <div class="form-field" style="margin:0;"><label class="form-label">Qty</label><input class="form-input" id="f-l0q" placeholder="—" readonly /></div>
+              <div class="form-field" style="margin:0;"><label class="form-label">Total</label><input class="form-input" id="f-l0t" placeholder="—" readonly /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="line-entry" id="line1">
+          <div class="line-entry-label">Line 2</div>
+          <div class="form-row2">
+            <div class="form-field" style="margin:0;"><label class="form-label">Description</label><input class="form-input" id="f-l1d" placeholder="—" readonly /></div>
+            <div class="form-row2" style="gap:6px;">
+              <div class="form-field" style="margin:0;"><label class="form-label">Qty</label><input class="form-input" id="f-l1q" placeholder="—" readonly /></div>
+              <div class="form-field" style="margin:0;"><label class="form-label">Total</label><input class="form-input" id="f-l1t" placeholder="—" readonly /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="line-entry" id="line2">
+          <div class="line-entry-label">Line 3</div>
+          <div class="form-row2">
+            <div class="form-field" style="margin:0;"><label class="form-label">Description</label><input class="form-input" id="f-l2d" placeholder="—" readonly /></div>
+            <div class="form-row2" style="gap:6px;">
+              <div class="form-field" style="margin:0;"><label class="form-label">Qty</label><input class="form-input" id="f-l2q" placeholder="—" readonly /></div>
+              <div class="form-field" style="margin:0;"><label class="form-label">Total</label><input class="form-input" id="f-l2t" placeholder="—" readonly /></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="saved-banner" id="saved-banner">
+          Invoice INV-2026-0847 posted to accounts payable — ref #AP-00412
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="summary-row">
+    <div class="sum-card">
+      <div class="sum-label">Fields filled</div>
+      <div class="sum-val blue" id="sum-fields">0 / 14</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Time saved</div>
+      <div class="sum-val green" id="sum-time">0 min</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">Errors found</div>
+      <div class="sum-val" id="sum-errors">0</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="sdot" id="sdot"></div>
+    <div class="smsg" id="smsg">Press <b>Run bot</b> to start the invoice data entry automation.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="run-btn" id="run-btn" onclick="runBot()">Run bot</button>
+    <button class="reset-btn" id="reset-btn" onclick="resetBot()" disabled>Reset</button>
+  </div>
+
+  <div class="footer">RPA Invoice Data Entry Demo &mdash; automate the repetitive, focus on what matters.</div>
+
+</div>
+
+<script>
+  let running = false;
+  let fieldCount = 0;
+
+  document.getElementById('speed-slider').addEventListener('input', function() {
+    const labels = { '1': 'Slow', '2': 'Normal', '3': 'Fast' };
+    document.getElementById('speed-label').textContent = labels[this.value];
+  });
+
+  function getDelay() {
+    const v = parseInt(document.getElementById('speed-slider').value);
+    return v === 1 ? 2.0 : v === 2 ? 1.0 : 0.4;
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function sd(s) { return sleep(getDelay() * s * 1000); }
+
+  function setChip(n, state) {
+    const el = document.getElementById('chip' + n);
+    el.className = 'step-chip' + (state === 'active' ? ' chip-active' : state === 'done' ? ' chip-done' : '');
+  }
+
+  function setStatus(msg, state) {
+    document.getElementById('sdot').className = 'sdot ' + (state || 'running');
+    const el = document.getElementById('smsg');
+    el.className = 'smsg' + (state === 'done' ? ' done-msg' : '');
+    el.innerHTML = msg;
+  }
+
+  function hlSrc(id) {
+    document.querySelectorAll('.inv-val').forEach(e => e.classList.remove('hl'));
+    if (id) { const el = document.getElementById(id); if (el) el.classList.add('hl'); }
+  }
+
+  function typeInto(id, text) {
+    return new Promise(resolve => {
+      const el = document.getElementById(id);
+      if (!el) return resolve();
+      el.className = 'form-input typing';
+      let i = 0;
+      const interval = Math.max(25, getDelay() * 55);
+      const iv = setInterval(() => {
+        el.value = text.slice(0, ++i);
+        if (i >= text.length) {
+          clearInterval(iv);
+          el.className = 'form-input filled';
+          fieldCount++;
+          document.getElementById('sum-fields').textContent = fieldCount + ' / 14';
+          const mins = Math.max(1, Math.round(fieldCount * 0.57));
+          document.getElementById('sum-time').textContent = mins + ' min';
+          resolve();
+        }
+      }, interval);
+    });
+  }
+
+  async function runBot() {
+    if (running) return;
+    running = true;
+    fieldCount = 0;
+    document.getElementById('run-btn').disabled = true;
+    document.getElementById('reset-btn').disabled = true;
+
+    setChip(1, 'active');
+    setStatus('<b>Bot:</b> Scanning and reading source invoice...');
+    hlSrc('src-inv');
+    await sd(0.5);
+    hlSrc('src-vendor'); await sd(0.25);
+    hlSrc('src-vid');    await sd(0.25);
+    hlSrc('src-date');   await sd(0.25);
+    hlSrc('src-due');    await sd(0.25);
+    hlSrc('src-po');     await sd(0.25);
+    hlSrc('src-total');  await sd(0.3);
+    hlSrc(null);
+    setChip(1, 'done');
+
+    setChip(2, 'active');
+    setStatus('<b>Bot:</b> Entering vendor details into ERP...');
+    hlSrc('src-inv');   await sd(0.2); await typeInto('f-inv', 'INV-2026-0847');
+    hlSrc('src-po');    await sd(0.15); await typeInto('f-po', 'PO-9921');
+    hlSrc('src-vendor');await sd(0.15); await typeInto('f-vendor', 'Apex Supplies Ltd.');
+    hlSrc('src-vid');   await sd(0.15); await typeInto('f-vid', 'VND-00312');
+    setChip(2, 'done');
+
+    setChip(3, 'active');
+    setStatus('<b>Bot:</b> Entering invoice and due dates...');
+    hlSrc('src-date');  await sd(0.2); await typeInto('f-date', '2026-04-18');
+    hlSrc('src-due');   await sd(0.15); await typeInto('f-due', '2026-05-18');
+    setChip(3, 'done');
+
+    setChip(4, 'active');
+    setStatus('<b>Bot:</b> Entering financial amounts...');
+    hlSrc('src-sub');   await sd(0.2); await typeInto('f-sub', '$2,630.00');
+    hlSrc('src-tax');   await sd(0.15); await typeInto('f-tax', '$263.00');
+    hlSrc('src-total'); await sd(0.15); await typeInto('f-total', '$2,893.00');
+    setChip(4, 'done');
+
+    setChip(5, 'active');
+    setStatus('<b>Bot:</b> Entering line items...');
+    const lines = [
+      ['Office chairs', '10', '$890.00'],
+      ['Desk lamps', '20', '$690.00'],
+      ['Filing cabinets', '5', '$1,050.00'],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [desc, qty, total] = lines[i];
+      document.getElementById('line' + i).className = 'line-entry active-line';
+      const srcRow = document.getElementById('src-row' + i);
+      if (srcRow) srcRow.className = 'row-hl';
+      hlSrc(null);
+      await sd(0.25);
+      await typeInto('f-l' + i + 'd', desc);
+      await sd(0.1);
+      await typeInto('f-l' + i + 'q', qty);
+      await sd(0.1);
+      await typeInto('f-l' + i + 't', total);
+      document.getElementById('line' + i).className = 'line-entry done-line';
+      if (srcRow) srcRow.className = 'row-done';
+    }
+    setChip(5, 'done');
+
+    setChip(6, 'active');
+    setStatus('<b>Bot:</b> Validating data and posting to accounts payable...');
+    hlSrc(null);
+    await sd(0.9);
+    document.getElementById('sum-errors').textContent = '0';
+    document.getElementById('sum-errors').style.color = 'var(--green)';
+    document.getElementById('saved-banner').style.display = 'block';
+    setChip(6, 'done');
+
+    document.getElementById('sum-fields').textContent = '14 / 14';
+    document.getElementById('sum-time').textContent = '8 min';
+    setStatus('<b>Done!</b> All 14 fields entered. Invoice posted — ref #AP-00412. ~8 min of manual work saved.', 'done');
+    document.getElementById('reset-btn').disabled = false;
+    running = false;
+  }
+
+  function resetBot() {
+    [1,2,3,4,5,6].forEach(n => setChip(n, ''));
+    const ids = ['f-inv','f-po','f-vendor','f-vid','f-date','f-due','f-sub','f-tax','f-total',
+                 'f-l0d','f-l0q','f-l0t','f-l1d','f-l1q','f-l1t','f-l2d','f-l2q','f-l2t'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.className = 'form-input'; }
+    });
+    [0,1,2].forEach(i => {
+      document.getElementById('line' + i).className = 'line-entry';
+      const srcRow = document.getElementById('src-row' + i);
+      if (srcRow) srcRow.className = '';
+    });
+    document.querySelectorAll('.inv-val').forEach(e => e.classList.remove('hl'));
+    document.getElementById('saved-banner').style.display = 'none';
+    document.getElementById('sum-fields').textContent = '0 / 14';
+    document.getElementById('sum-time').textContent = '0 min';
+    document.getElementById('sum-errors').textContent = '0';
+    document.getElementById('sum-errors').style.color = '';
+    document.getElementById('sdot').className = 'sdot';
+    document.getElementById('smsg').className = 'smsg';
+    document.getElementById('smsg').innerHTML = 'Press <b>Run bot</b> to start the invoice data entry automation.';
+    document.getElementById('run-btn').disabled = false;
+    document.getElementById('reset-btn').disabled = true;
+    fieldCount = 0;
+  }
+</script>
+</body>
+</html>
