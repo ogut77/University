@@ -161,6 +161,7 @@ https://mobile.twitter.com/arvanaghi/status/1537519858233008128
 
 
 AI
+
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/rpa_demo.html
 
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/rpa_invoice.html
