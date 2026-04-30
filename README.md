@@ -168,4 +168,6 @@ https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/rp
 
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/rpa_invoice.html
 
+https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/AIAgents.html
+
 
