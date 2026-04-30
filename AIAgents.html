@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA AI Agents Demo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; padding: 2rem 1.5rem; }
+  .wrapper { max-width: 860px; margin: 0 auto; }
+
+  .page-header { margin-bottom: 2rem; }
+  .page-header h1 { font-size: 26px; font-weight: 600; color: #1a1a18; margin-bottom: 5px; }
+  .page-header p { font-size: 14px; color: #5f5e5a; }
+
+  .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.75rem; }
+  .agent-card { background: #fff; border: 1px solid #e0dfd5; border-radius: 12px; padding: 1rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+  .agent-card:hover { border-color: #bbb; }
+  .agent-card.active { border: 2px solid #185FA5; }
+  .agent-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+  .agent-name { font-size: 13px; font-weight: 600; color: #1a1a18; margin-bottom: 2px; }
+  .agent-role { font-size: 11px; color: #888; margin-bottom: 8px; }
+  .status-dot { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #888; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot-idle { background: #bbb; }
+  .dot-running { background: #1D9E75; animation: pulse 1.2s infinite; }
+  .dot-done { background: #185FA5; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .workspace { background: #fff; border: 1px solid #e0dfd5; border-radius: 14px; overflow: hidden; }
+  .ws-header { padding: 14px 1.25rem; border-bottom: 1px solid #e0dfd5; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .ws-title { font-size: 14px; font-weight: 600; color: #1a1a18; }
+  .run-btn { background: #185FA5; color: #e6f1fb; border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 500; transition: background 0.15s; }
+  .run-btn:hover { background: #0C447C; }
+  .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .scenario-bar { display: flex; gap: 8px; padding: 12px 1.25rem; border-bottom: 1px solid #e0dfd5; flex-wrap: wrap; }
+  .sc-chip { font-size: 12px; padding: 5px 13px; border: 1px solid #e0dfd5; border-radius: 20px; cursor: pointer; color: #5f5e5a; background: transparent; font-family: inherit; transition: all 0.1s; }
+  .sc-chip:hover { border-color: #bbb; color: #1a1a18; }
+  .sc-chip.selected { background: #E6F1FB; color: #0C447C; border-color: #378ADD; }
+
+  .output-area { padding: 1.25rem; min-height: 240px; }
+  .empty-msg { color: #aaa; font-size: 14px; text-align: center; padding-top: 3.5rem; }
+  .msg { display: flex; gap: 10px; margin-bottom: 14px; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+  .msg-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .msg-from { font-size: 11px; font-weight: 600; color: #888; margin-bottom: 3px; }
+  .msg-text { font-size: 13px; color: #1a1a18; line-height: 1.55; background: #f5f4f0; border-radius: 10px; padding: 9px 13px; display: inline-block; max-width: 96%; }
+  .msg-text.typing::after { content: '▋'; animation: blink 0.8s step-end infinite; color: #185FA5; }
+  @keyframes blink { 50%{opacity:0} }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 1.25rem 1.25rem; }
+  .metric { background: #f5f4f0; border-radius: 10px; padding: 12px 14px; }
+  .metric-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .metric-val { font-size: 18px; font-weight: 600; color: #1a1a18; }
+  .metric-delta { font-size: 11px; margin-top: 3px; }
+  .pos { color: #0F6E56; } .neg { color: #993C1D; }
+
+  @media (max-width: 500px) {
+    .metrics-row { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="page-header">
+    <h1>MBA AI Agents Demo</h1>
+    <p>Six autonomous agents collaborating on real business decisions</p>
+  </div>
+
+  <div class="agents-grid" id="agentsGrid"></div>
+
+  <div class="workspace">
+    <div class="ws-header">
+      <span class="ws-title" id="wsTitle">Select an agent to begin</span>
+      <button class="run-btn" id="runBtn" onclick="runScenario()">Run ↗</button>
+    </div>
+    <div class="scenario-bar" id="scenarioBar"></div>
+    <div class="output-area" id="outputArea">
+      <div class="empty-msg" id="emptyMsg">Click an agent above, choose a scenario, and hit Run.</div>
+    </div>
+    <div class="metrics-row" id="metricsRow" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+const AGENTS = [
+  { id:'cfo', name:'Aria Chen', role:'CFO Agent', emoji:'💼', color:'#E6F1FB', textColor:'#185FA5',
+    scenarios:['Q3 budget variance','Runway analysis','M&A valuation'],
+    outputs:{
+      'Q3 budget variance':[
+        {text:'Pulling Q3 actuals from finance system...'},
+        {text:'Revenue came in at $4.2M — 8% above forecast. COGS overrun by $340K primarily in cloud infrastructure.'},
+        {text:'Net variance: +$186K favorable. Recommend reallocating $120K to product dev in Q4. Full variance report ready.'},
+      ],
+      'Runway analysis':[
+        {text:'Current cash position: $8.7M. Monthly burn: $620K.'},
+        {text:'At current burn, runway is 14 months. With planned Series B, extends to 28 months.'},
+        {text:'Flagging: three enterprise deals closing Q4 could reduce burn to $490K/mo — extending runway to 17 months organically.'},
+      ],
+      'M&A valuation':[
+        {text:'Running DCF and comparable company analysis on the target...'},
+        {text:'Target EBITDA multiple: 6.2x based on SaaS peers. DCF intrinsic value: $34M–$41M range.'},
+        {text:'Recommend bid ceiling of $38M. Key synergies: $2.1M/yr in shared infrastructure savings.'},
+      ]
+    },
+    metrics:['$4.2M','14 mo','6.2x','$186K'],
+    metaLabels:['Revenue','Runway','EBITDA mul.','Variance'],
+    deltas:['+8%','+4mo','benchmark','+favorable'],
+    pos:[true,true,true,true]
+  },
+  { id:'cmo', name:'Marcus Lee', role:'CMO Agent', emoji:'📊', color:'#E1F5EE', textColor:'#0F6E56',
+    scenarios:['Campaign ROI audit','Churn attribution','Launch strategy'],
+    outputs:{
+      'Campaign ROI audit':[
+        {text:'Analyzing 12 active campaigns across paid, organic, and partnerships...'},
+        {text:'Top performer: LinkedIn ABM — 3.8x ROAS. Worst: display retargeting — 0.6x ROAS, recommend pause.'},
+        {text:'Reallocating $45K from display to LinkedIn + email nurture. Projected pipeline increase: +$320K.'},
+      ],
+      'Churn attribution':[
+        {text:'Cross-referencing churn data with campaign touchpoints and NPS scores...'},
+        {text:'68% of churned accounts had zero marketing touchpoints in final 60 days. Activation gap identified.'},
+        {text:'Proposed fix: automated 60-day re-engagement sequence. Expected churn reduction: 12%.'},
+      ],
+      'Launch strategy':[
+        {text:'Building GTM plan for new enterprise tier launch...'},
+        {text:'ICP defined: 200–2000 employee SaaS, VP Engineering / CTO buyer. Estimated TAM: 14,000 accounts.'},
+        {text:'3-phase plan: awareness (weeks 1–4), proof (5–8), conversion (9–12). Budget: $180K.'},
+      ]
+    },
+    metrics:['3.8x','$320K','-12%','14K'],
+    metaLabels:['ROAS','Pipeline uplift','Churn reduction','TAM accounts'],
+    deltas:['+best channel','+projected','-target churn','addressable'],
+    pos:[true,true,false,true]
+  },
+  { id:'ops', name:'Priya Sharma', role:'COO Agent', emoji:'⚙️', color:'#FEF3DC', textColor:'#854F0B',
+    scenarios:['Bottleneck analysis','Headcount model','Supply chain risk'],
+    outputs:{
+      'Bottleneck analysis':[
+        {text:'Running process mining on ticket data and deployment logs...'},
+        {text:'Critical bottleneck: QA sign-off adding avg 4.2 days to release cycle. Only 2 QA engineers for 8 squads.'},
+        {text:'Solution: shift-left testing + 1 QA hire. Expected cycle time reduction: 2.8 days. ROI payback: 3 months.'},
+      ],
+      'Headcount model':[
+        {text:'Modeling headcount scenarios against revenue targets...'},
+        {text:'To hit $20M ARR: need +6 AEs, +3 engineers, +2 CSMs in H1. Total cost: $1.8M annualized.'},
+        {text:'Conservative scenario (85% attainment): delay 2 AE hires to Q3. Saves $280K, minimal risk.'},
+      ],
+      'Supply chain risk':[
+        {text:'Assessing vendor concentration and single-point-of-failure risks...'},
+        {text:'High risk: 71% of data processing runs through one vendor. No SLA for >4hr outages.'},
+        {text:'Recommend: dual-vendor strategy for top 3 infra components. Migration timeline: 10 weeks.'},
+      ]
+    },
+    metrics:['2.8 days','$1.8M','71%','3 mo'],
+    metaLabels:['Cycle savings','HC investment','Vendor conc.','Payback'],
+    deltas:['saved','+annualized','high risk','ROI'],
+    pos:[true,false,false,true]
+  },
+  { id:'strategy', name:'Jordan Kim', role:'Strategy Agent', emoji:'🎯', color:'#FBEAF0', textColor:'#993556',
+    scenarios:['Competitive landscape','Market entry','Portfolio review'],
+    outputs:{
+      'Competitive landscape':[
+        {text:'Scanning competitive signals: pricing pages, job postings, G2 reviews, funding news...'},
+        {text:'Competitor A raised $50M Series C — likely accelerating enterprise expansion. Competitor B lost 3 senior engineers this month.'},
+        {text:'Your differentiation window: 6–9 months before Competitor A ships enterprise features. Prioritize locking in 10 anchor accounts now.'},
+      ],
+      'Market entry':[
+        {text:'Evaluating 4 potential market expansion vectors...'},
+        {text:'Highest-opportunity: DACH region — 340 qualified prospects, low competition density, EU data residency can be matched.'},
+        {text:'Recommended entry: partner-led via 2 established SI partners. Investment: $220K. Expected 18-month return: $1.4M ARR.'},
+      ],
+      'Portfolio review':[
+        {text:'Scoring product portfolio across growth rate, margin, and strategic fit...'},
+        {text:'Stars: Core platform (NPS 72), Analytics add-on (140% NRR). Dogs: Legacy API product (declining -22% YoY).'},
+        {text:'Recommendation: sunset Legacy API, redirect 3 engineers to Analytics roadmap. Projected impact: +$800K ARR.'},
+      ]
+    },
+    metrics:['6-9 mo','$1.4M','140%','+$800K'],
+    metaLabels:['Diff. window','Entry ARR','NRR (Analytics)','Sunset impact'],
+    deltas:['act fast','18-month','expansion revenue','+ARR'],
+    pos:[false,true,true,true]
+  },
+  { id:'risk', name:'Sam Osei', role:'Risk Agent', emoji:'🛡️', color:'#FCEBEB', textColor:'#A32D2D',
+    scenarios:['Compliance audit','Contract risk','Fraud signals'],
+    outputs:{
+      'Compliance audit':[
+        {text:'Running SOC 2 Type II readiness assessment across 14 control domains...'},
+        {text:'Critical gaps: access review logs incomplete for 3 systems, vendor DPAs missing for 2 sub-processors.'},
+        {text:'90-day remediation plan generated. Estimated audit readiness: 87% → 99% with plan execution.'},
+      ],
+      'Contract risk':[
+        {text:'Reviewing 23 pending contracts for non-standard clauses...'},
+        {text:'Flagged: 4 contracts with uncapped liability clauses, 2 with IP ownership ambiguity, 1 with exclusivity trap.'},
+        {text:'Redlines prepared for all 7. Legal review needed only for 2 high-complexity items. Saves 11 hrs of counsel time.'},
+      ],
+      'Fraud signals':[
+        {text:'Running anomaly detection on transaction and account activity...'},
+        {text:'3 accounts flagged: unusual login patterns + bulk data exports within 48 hrs of free-trial expiry.'},
+        {text:'Risk score: High. Recommend account freeze pending review. Potential revenue recovery: $12K.'},
+      ]
+    },
+    metrics:['87%→99%','7 flagged','$12K','11 hrs'],
+    metaLabels:['Audit readiness','Contracts at risk','Fraud recovery','Counsel saved'],
+    deltas:['after remediation','need redlines','recovered','saved'],
+    pos:[true,false,true,true]
+  },
+  { id:'hr', name:'Elena Vasquez', role:'People Agent', emoji:'👥', color:'#EEEDFE', textColor:'#534AB7',
+    scenarios:['Attrition risk','Hiring funnel','Comp benchmarking'],
+    outputs:{
+      'Attrition risk':[
+        {text:'Analyzing engagement scores, tenure patterns, and 1:1 sentiment data...'},
+        {text:'High attrition risk: 6 engineers and 2 senior ICs — modeled at >70% 6-month flight risk. Estimated replacement cost: $1.1M.'},
+        {text:'Interventions: targeted retention bonuses ($140K total), two critical role scope expansions. Expected risk reduction: 65%.'},
+      ],
+      'Hiring funnel':[
+        {text:'Diagnosing 90-day engineering hiring funnel...'},
+        {text:'Top drop-off: screen-to-onsite at 18% (benchmark: 35%). Root cause: job descriptions misaligned with actual role.'},
+        {text:'Rewriting 4 JDs + adding async technical screen. Projected funnel fix: 2x conversion in 6 weeks.'},
+      ],
+      'Comp benchmarking':[
+        {text:'Pulling Radford + Levels.fyi data for 12 benchmark roles...'},
+        {text:'7 roles below P50. Most critical: Staff Engineer role at 12% below market — direct attrition risk.'},
+        {text:'Comp adjustment needed: $380K annualized across 7 roles. ROI vs replacement cost: 3.4x.'},
+      ]
+    },
+    metrics:['6 at risk','2x funnel','$380K','3.4x'],
+    metaLabels:['Flight risk ICs','Conversion fix','Comp adjustment','Retention ROI'],
+    deltas:['high priority','in 6 weeks','annualized','vs replacement'],
+    pos:[false,true,false,true]
+  }
+];
+
+let selected = null;
+let selectedScenario = null;
+let running = false;
+
+function renderAgents() {
+  const grid = document.getElementById('agentsGrid');
+  grid.innerHTML = AGENTS.map(a => `
+    <div class="agent-card" id="card-${a.id}" onclick="selectAgent('${a.id}')">
+      <div class="agent-icon" style="background:${a.color};color:${a.textColor};">${a.emoji}</div>
+      <div class="agent-name">${a.name}</div>
+      <div class="agent-role">${a.role}</div>
+      <span class="status-dot">
+        <span class="dot dot-idle" id="dot-${a.id}"></span>
+        <span id="status-${a.id}">idle</span>
+      </span>
+    </div>
+  `).join('');
+}
+
+function selectAgent(id) {
+  selected = AGENTS.find(a => a.id === id);
+  selectedScenario = selected.scenarios[0];
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-'+id).classList.add('active');
+  document.getElementById('wsTitle').textContent = selected.name + ' · ' + selected.role;
+  renderScenarios();
+  clearOutput();
+}
+
+function renderScenarios() {
+  const bar = document.getElementById('scenarioBar');
+  bar.innerHTML = selected.scenarios.map(s => `
+    <button class="sc-chip ${s===selectedScenario?'selected':''}" onclick="pickScenario('${s}')">${s}</button>
+  `).join('');
+}
+
+function pickScenario(s) {
+  selectedScenario = s;
+  renderScenarios();
+  clearOutput();
+}
+
+function clearOutput() {
+  const area = document.getElementById('outputArea');
+  area.innerHTML = '';
+  document.getElementById('metricsRow').style.display = 'none';
+  const e = document.getElementById('emptyMsg');
+  if (e) e.remove();
+}
+
+async function runScenario() {
+  if (!selected || running) return;
+  running = true;
+  document.getElementById('runBtn').disabled = true;
+  clearOutput();
+
+  const dot = document.getElementById('dot-'+selected.id);
+  const statusEl = document.getElementById('status-'+selected.id);
+  dot.className = 'dot dot-running';
+  statusEl.textContent = 'running';
+
+  const msgs = selected.outputs[selectedScenario];
+  const area = document.getElementById('outputArea');
+
+  for (let i = 0; i < msgs.length; i++) {
+    await sleep(500 + i * 180);
+    const div = document.createElement('div');
+    div.className = 'msg';
+    div.innerHTML = `
+      <div class="msg-avatar" style="background:${selected.color};color:${selected.textColor};">${selected.emoji}</div>
+      <div style="flex:1;">
+        <div class="msg-from">${selected.name}</div>
+        <div class="msg-text typing" id="bubble-${i}"></div>
+      </div>`;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+    await typeText('bubble-'+i, msgs[i].text);
+    document.getElementById('bubble-'+i).classList.remove('typing');
+  }
+
+  await sleep(350);
+  dot.className = 'dot dot-done';
+  statusEl.textContent = 'done';
+  renderMetrics();
+  running = false;
+  document.getElementById('runBtn').disabled = false;
+}
+
+async function typeText(id, text) {
+  const el = document.getElementById(id);
+  const delay = Math.max(10, Math.min(28, 1600 / text.length));
+  for (let i = 0; i <= text.length; i++) {
+    el.textContent = text.slice(0, i);
+    await sleep(delay);
+  }
+}
+
+function renderMetrics() {
+  const row = document.getElementById('metricsRow');
+  row.style.display = 'grid';
+  row.innerHTML = selected.metrics.map((v, i) => `
+    <div class="metric">
+      <div class="metric-label">${selected.metaLabels[i]}</div>
+      <div class="metric-val">${v}</div>
+      <div class="metric-delta ${selected.pos[i]?'pos':'neg'}">${selected.deltas[i]}</div>
+    </div>
+  `).join('');
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+renderAgents();
+</script>
+</body>
+</html>
