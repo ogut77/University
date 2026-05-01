@@ -172,10 +172,8 @@ https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/AI
 
 ERP DEMO
 
-
-
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/supply_chain_demo.html
 
-
-
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/O2C_ERP.html
+
+https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/crm_demo.html
