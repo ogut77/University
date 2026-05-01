@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexusCRM — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f6f3;
+  --sidebar-bg: #0e1117;
+  --sidebar-text: #9a9fad;
+  --sidebar-active: #ffffff;
+  --card: #ffffff;
+  --border: #e8e6e0;
+  --text: #1a1a1a;
+  --muted: #8a8a8a;
+  --accent: #e85d26;
+  --accent2: #2563eb;
+  --green: #16a34a;
+  --amber: #d97706;
+  --red: #dc2626;
+  --purple: #7c3aed;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Lato',sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; }
+
+/* ── SIDEBAR ─────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 220px; flex-shrink:0;
+  background: var(--sidebar-bg);
+  display: flex; flex-direction:column;
+  padding: 0;
+  border-right: 1px solid #1e2230;
+}
+.sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid #1e2230;
+}
+.brand-name {
+  font-family:'Syne',sans-serif;
+  font-size:18px; font-weight:800;
+  color:#fff; letter-spacing:-0.02em;
+}
+.brand-name span { color: var(--accent); }
+.brand-tag { font-size:10px; color:#4a4f5e; letter-spacing:.1em; text-transform:uppercase; margin-top:2px; }
+
+.nav-section { padding: 16px 0 8px; }
+.nav-label { font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#3a3f50; padding:0 20px 8px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding: 9px 20px; font-size:13px; color:var(--sidebar-text);
+  cursor:pointer; transition:all .15s;
+  border-left: 2px solid transparent;
+  font-weight:400;
+}
+.nav-item:hover { color:#d0d4df; background:rgba(255,255,255,0.04); }
+.nav-item.active { color:var(--sidebar-active); background:rgba(255,255,255,0.06); border-left-color:var(--accent); }
+.nav-icon { font-size:15px; width:18px; text-align:center; }
+.nav-badge { margin-left:auto; background:#e85d26; color:#fff; font-size:9px; font-weight:700; padding:2px 6px; border-radius:10px; }
+
+.sidebar-footer { margin-top:auto; padding:16px 20px; border-top:1px solid #1e2230; }
+.user-row { display:flex; align-items:center; gap:10px; }
+.user-av { width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#e85d26,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0; }
+.user-name { font-size:12px; color:#d0d4df; font-weight:600; }
+.user-role { font-size:10px; color:#4a4f5e; }
+
+/* ── MAIN CONTENT ─────────────────────────────────────────────────────── */
+.main {
+  flex:1; overflow:hidden; display:flex; flex-direction:column;
+}
+
+/* TOPBAR */
+.topbar {
+  height:56px; background:var(--card); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px; flex-shrink:0;
+}
+.topbar-left { display:flex; align-items:center; gap:16px; }
+.page-title { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); }
+.topbar-right { display:flex; align-items:center; gap:12px; }
+.tb-btn {
+  padding:7px 16px; border-radius:7px; font-size:12px; font-weight:700;
+  cursor:pointer; border:none; font-family:'Lato',sans-serif; transition:all .15s;
+}
+.tb-btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.tb-btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+.tb-btn-primary { background:var(--accent); color:#fff; }
+.tb-btn-primary:hover { background:#d04d18; }
+
+/* TAB BAR */
+.tab-bar {
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  background:var(--card); padding:0 28px; flex-shrink:0;
+}
+.tab {
+  padding:12px 20px; font-size:13px; font-weight:600; color:var(--muted);
+  cursor:pointer; border-bottom:2px solid transparent; transition:all .15s;
+  white-space:nowrap;
+}
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+/* SCROLL AREA */
+.content-scroll { flex:1; overflow-y:auto; padding:28px; }
+.content-scroll::-webkit-scrollbar { width:5px; }
+.content-scroll::-webkit-scrollbar-track { background:transparent; }
+.content-scroll::-webkit-scrollbar-thumb { background:#ddd; border-radius:3px; }
+
+/* VIEWS */
+.view { display:none; }
+.view.active { display:block; }
+
+/* ── KPI ROW ── */
+.kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.kpi-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:20px 22px;
+  box-shadow:var(--shadow);
+  animation: fadeUp .4s ease both;
+}
+.kpi-card:nth-child(1){animation-delay:.05s}
+.kpi-card:nth-child(2){animation-delay:.1s}
+.kpi-card:nth-child(3){animation-delay:.15s}
+.kpi-card:nth-child(4){animation-delay:.2s}
+.kpi-l { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:8px; }
+.kpi-v { font-family:'Syne',sans-serif; font-size:28px; font-weight:700; color:var(--text); }
+.kpi-d { font-size:12px; margin-top:5px; }
+.kpi-d .up { color:var(--green); font-weight:700; }
+.kpi-d .dn { color:var(--red); font-weight:700; }
+.kpi-d .neutral { color:var(--muted); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── PIPELINE BOARD ── */
+.pipeline-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.pipeline-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; }
+.pipeline-meta { font-size:12px; color:var(--muted); }
+.board { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; overflow-x:auto; }
+.stage-col { min-width:180px; }
+.stage-head {
+  padding:10px 12px; border-radius:8px 8px 0 0;
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px;
+}
+.stage-count { font-size:10px; padding:2px 7px; border-radius:10px; font-weight:700; }
+.deal-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:10px; padding:14px; margin-bottom:8px;
+  box-shadow:var(--shadow); cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+  animation: fadeUp .35s ease both;
+  position:relative; overflow:hidden;
+}
+.deal-card::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; }
+.deal-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.deal-company { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.deal-contact { font-size:11px; color:var(--muted); }
+.deal-value { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:var(--text); margin-top:8px; }
+.deal-close { font-size:10px; color:var(--muted); margin-top:2px; }
+.deal-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:8px; }
+.tag { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; text-transform:uppercase; letter-spacing:.05em; }
+
+/* Stage colors */
+.s-lead .stage-head { background:#f0f4ff; color:var(--accent2); }
+.s-lead .stage-count { background:#dbeafe; color:var(--accent2); }
+.s-lead .deal-card::before { background:var(--accent2); }
+
+.s-qual .stage-head { background:#fff7ed; color:#c2410c; }
+.s-qual .stage-count { background:#fed7aa; color:#c2410c; }
+.s-qual .deal-card::before { background:#f97316; }
+
+.s-prop .stage-head { background:#faf5ff; color:var(--purple); }
+.s-prop .stage-count { background:#ede9fe; color:var(--purple); }
+.s-prop .deal-card::before { background:var(--purple); }
+
+.s-neg .stage-head { background:#fffbeb; color:var(--amber); }
+.s-neg .stage-count { background:#fde68a; color:#92400e; }
+.s-neg .deal-card::before { background:var(--amber); }
+
+.s-close .stage-head { background:#f0fdf4; color:var(--green); }
+.s-close .stage-count { background:#bbf7d0; color:var(--green); }
+.s-close .deal-card::before { background:var(--green); }
+
+/* ── PROCESS WALKTHROUGH ── */
+.process-section {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:28px; margin-top:24px;
+  box-shadow:var(--shadow);
+}
+.process-section-title {
+  font-family:'Syne',sans-serif; font-size:20px; font-weight:800;
+  margin-bottom:4px;
+}
+.process-section-sub { font-size:13px; color:var(--muted); margin-bottom:28px; }
+
+.process-steps {
+  display:flex; gap:0; position:relative; margin-bottom:40px;
+  overflow-x:auto; padding-bottom:4px;
+}
+.process-steps::before {
+  content:''; position:absolute; top:28px; left:32px; right:32px; height:2px;
+  background: linear-gradient(90deg, var(--accent2), #7c3aed, var(--accent), #d97706, var(--green));
+  z-index:0;
+}
+.p-step {
+  flex:1; min-width:120px; display:flex; flex-direction:column; align-items:center;
+  text-align:center; cursor:pointer; position:relative; z-index:1; padding:0 8px;
+  transition:all .2s;
+}
+.p-circle {
+  width:56px; height:56px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; margin-bottom:10px;
+  border:3px solid transparent;
+  background:var(--bg);
+  transition:all .25s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.p-step.active .p-circle {
+  transform:scale(1.15);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+.p-step-label { font-size:12px; font-weight:700; color:var(--text); margin-bottom:2px; }
+.p-step-sub { font-size:10px; color:var(--muted); }
+.p-step.done .p-circle { opacity:.6; }
+
+/* Process detail panel */
+.process-detail {
+  display:grid; grid-template-columns:1fr 340px; gap:24px;
+  animation: fadeUp .3s ease;
+}
+.pd-left { }
+.pd-right { }
+
+.pd-stage-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 14px; border-radius:20px; font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px;
+}
+.pd-title { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; margin-bottom:6px; }
+.pd-desc { font-size:14px; color:#555; line-height:1.65; margin-bottom:20px; }
+
+.pd-actions { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.pd-action {
+  display:flex; align-items:center; gap:12px;
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:12px 16px;
+  font-size:13px; transition:all .15s; cursor:pointer;
+}
+.pd-action:hover { border-color:var(--accent); background:#fff; }
+.pd-action-icon { width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0; }
+.pd-action-text strong { display:block; font-weight:700; color:var(--text); margin-bottom:1px; }
+.pd-action-text span { font-size:11px; color:var(--muted); }
+
+/* CRM record card */
+.record-card {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:12px; padding:20px; position:relative; overflow:hidden;
+}
+.record-card-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.rec-av {
+  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.rec-name { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; }
+.rec-title { font-size:12px; color:var(--muted); }
+
+.rec-fields { display:flex; flex-direction:column; gap:8px; }
+.rec-field { display:flex; justify-content:space-between; align-items:center; }
+.rec-field-l { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+.rec-field-v { font-size:12px; font-weight:600; color:var(--text); }
+
+.rec-divider { height:1px; background:var(--border); margin:12px 0; }
+
+/* Activity timeline */
+.activity-list { margin-top:16px; }
+.activity-item { display:flex; gap:12px; margin-bottom:14px; position:relative; }
+.activity-item::before {
+  content:''; position:absolute; left:14px; top:28px; bottom:-14px; width:1px;
+  background:var(--border);
+}
+.activity-item:last-child::before { display:none; }
+.a-dot { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0; }
+.a-body { flex:1; }
+.a-title { font-size:12px; font-weight:700; color:var(--text); }
+.a-meta { font-size:11px; color:var(--muted); margin-top:1px; }
+.a-note { font-size:12px; color:#555; background:var(--bg); border-radius:6px; padding:8px 10px; margin-top:6px; }
+
+/* Progress bar */
+.prob-row { display:flex; align-items:center; gap:10px; margin-top:12px; }
+.prob-label { font-size:11px; color:var(--muted); white-space:nowrap; }
+.prob-track { flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden; }
+.prob-fill { height:100%; border-radius:99px; transition:width .8s cubic-bezier(.22,.68,0,1.2); }
+.prob-val { font-size:12px; font-weight:700; white-space:nowrap; }
+
+/* Nav btn */
+.nav-btns { display:flex; gap:10px; margin-top:24px; }
+.nav-btn {
+  padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700;
+  cursor:pointer; border:none; font-family:'Lato',sans-serif; transition:all .15s;
+}
+.nav-btn-prev { background:var(--bg); color:var(--muted); border:1px solid var(--border); }
+.nav-btn-prev:hover { border-color:var(--accent); color:var(--accent); }
+.nav-btn-next { background:var(--accent); color:#fff; }
+.nav-btn-next:hover { background:#d04d18; }
+.nav-btn:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ── CONTACTS VIEW ── */
+.contacts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.contact-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:20px; box-shadow:var(--shadow);
+  cursor:pointer; transition:all .15s;
+  animation: fadeUp .4s ease both;
+}
+.contact-card:hover { box-shadow:var(--shadow-lg); transform:translateY(-2px); }
+.cc-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.cc-av { width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff; }
+.cc-name { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; }
+.cc-co { font-size:11px; color:var(--muted); }
+.cc-fields { font-size:12px; color:#555; display:flex; flex-direction:column; gap:4px; }
+.cc-fields span { display:flex; align-items:center; gap:6px; }
+.cc-status { display:inline-block; padding:3px 8px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-top:10px; }
+
+/* ── REPORTS VIEW ── */
+.reports-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.report-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:22px; box-shadow:var(--shadow);
+  animation: fadeUp .4s ease both;
+}
+.report-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; margin-bottom:4px; }
+.report-sub { font-size:12px; color:var(--muted); margin-bottom:18px; }
+.mini-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.mini-bar-label { font-size:12px; color:var(--text); width:90px; flex-shrink:0; font-weight:600; }
+.mini-bar-track { flex:1; height:8px; background:var(--bg); border-radius:99px; overflow:hidden; }
+.mini-bar-fill { height:100%; border-radius:99px; }
+.mini-bar-val { font-size:12px; font-weight:700; color:var(--text); width:44px; text-align:right; }
+
+/* ── NOTIFICATION DOT ── */
+.notif { position:relative; }
+.notif-dot { position:absolute; top:-2px;right:-2px; width:8px;height:8px;background:var(--accent);border-radius:50%;border:2px solid var(--card); }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:28px;right:28px;
+  background:#1a1a1a; color:#fff; font-size:13px; font-weight:600;
+  padding:12px 20px; border-radius:10px; display:flex; align-items:center; gap:10px;
+  transform:translateY(80px); opacity:0; transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:1000; box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-icon { font-size:16px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Nexus<span>CRM</span></div>
+    <div class="brand-tag">Sales Intelligence Platform</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" onclick="switchView('pipeline',this)">
+      <span class="nav-icon">⚡</span> Pipeline
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item" onclick="switchView('contacts',this)">
+      <span class="nav-icon">👥</span> Contacts
+    </div>
+    <div class="nav-item" onclick="switchView('reports',this)">
+      <span class="nav-icon">📊</span> Reports
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Tools</div>
+    <div class="nav-item" onclick="showToast('📅 Calendar synced')">
+      <span class="nav-icon">📅</span> Calendar
+    </div>
+    <div class="nav-item" onclick="showToast('✉️ 3 new emails')">
+      <span class="nav-icon">✉️</span> Email
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showToast('⚙️ Settings opened')">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-av">JD</div>
+      <div>
+        <div class="user-name">Jamie Donovan</div>
+        <div class="user-role">Sales Director</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title" id="pageTitle">Sales Pipeline</div>
+    </div>
+    <div class="topbar-right">
+      <div class="notif">
+        <button class="tb-btn tb-btn-ghost" onclick="showToast('🔔 2 new activities')">🔔 Alerts</button>
+        <div class="notif-dot"></div>
+      </div>
+      <button class="tb-btn tb-btn-primary" onclick="showToast('✅ New deal added to pipeline!')">+ Add Deal</button>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar" id="tabBar">
+    <div class="tab active" onclick="switchTab('pipeline-overview',this)">Overview</div>
+    <div class="tab" onclick="switchTab('pipeline-process',this)">🎬 Process Walkthrough</div>
+  </div>
+
+  <div class="content-scroll">
+
+    <!-- ══ PIPELINE VIEW ══ -->
+    <div class="view active" id="view-pipeline">
+
+      <!-- PIPELINE OVERVIEW TAB -->
+      <div id="tab-pipeline-overview">
+        <!-- KPIs -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-l">Pipeline Value</div>
+            <div class="kpi-v">$1.84M</div>
+            <div class="kpi-d"><span class="up">↑ 23%</span> <span class="neutral">vs last quarter</span></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-l">Deals Open</div>
+            <div class="kpi-v">12</div>
+            <div class="kpi-d"><span class="up">↑ 4</span> <span class="neutral">new this month</span></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-l">Win Rate</div>
+            <div class="kpi-v">38%</div>
+            <div class="kpi-d"><span class="up">↑ 5pp</span> <span class="neutral">vs target 35%</span></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-l">Avg Deal Cycle</div>
+            <div class="kpi-v">47d</div>
+            <div class="kpi-d"><span class="dn">↑ 3d</span> <span class="neutral">vs avg 44d</span></div>
+          </div>
+        </div>
+
+        <!-- KANBAN BOARD -->
+        <div class="pipeline-header">
+          <div class="pipeline-title">Active Deals — Kanban View</div>
+          <div class="pipeline-meta">Click any deal card to view details</div>
+        </div>
+        <div class="board">
+          <!-- Lead -->
+          <div class="stage-col s-lead">
+            <div class="stage-head">Lead <span class="stage-count">3</span></div>
+            <div class="deal-card" onclick="openDeal('Acme Corp','Sarah Miller','$84,000','Nov 15','SaaS','Enterprise',42)">
+              <div class="deal-company">Acme Corp</div>
+              <div class="deal-contact">Sarah Miller · VP Operations</div>
+              <div class="deal-value">$84,000</div>
+              <div class="deal-close">Close: Nov 15</div>
+              <div class="deal-tags"><span class="tag" style="background:#dbeafe;color:#1e40af;">SaaS</span><span class="tag" style="background:#f0f4ff;color:#6366f1;">Enterprise</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Northstar Media','James Wu','$36,500','Dec 2','Agency','Mid-market',28)">
+              <div class="deal-company">Northstar Media</div>
+              <div class="deal-contact">James Wu · CEO</div>
+              <div class="deal-value">$36,500</div>
+              <div class="deal-close">Close: Dec 2</div>
+              <div class="deal-tags"><span class="tag" style="background:#fef3c7;color:#92400e;">Agency</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Velox AI','Priya Nair','$210,000','Jan 10','AI/ML','Enterprise',60)">
+              <div class="deal-company">Velox AI</div>
+              <div class="deal-contact">Priya Nair · CTO</div>
+              <div class="deal-value">$210,000</div>
+              <div class="deal-close">Close: Jan 10</div>
+              <div class="deal-tags"><span class="tag" style="background:#ede9fe;color:#5b21b6;">AI/ML</span><span class="tag" style="background:#f0fdf4;color:#15803d;">Hot 🔥</span></div>
+            </div>
+          </div>
+
+          <!-- Qualified -->
+          <div class="stage-col s-qual">
+            <div class="stage-head">Qualified <span class="stage-count">2</span></div>
+            <div class="deal-card" onclick="openDeal('BluePeak Finance','Tom Carter','$155,000','Oct 28','FinTech','Enterprise',55)">
+              <div class="deal-company">BluePeak Finance</div>
+              <div class="deal-contact">Tom Carter · CFO</div>
+              <div class="deal-value">$155,000</div>
+              <div class="deal-close">Close: Oct 28</div>
+              <div class="deal-tags"><span class="tag" style="background:#fef3c7;color:#92400e;">FinTech</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Gridline Energy','Rosa Diaz','$67,800','Nov 5','Energy','Mid-market',40)">
+              <div class="deal-company">Gridline Energy</div>
+              <div class="deal-contact">Rosa Diaz · Procurement</div>
+              <div class="deal-value">$67,800</div>
+              <div class="deal-close">Close: Nov 5</div>
+              <div class="deal-tags"><span class="tag" style="background:#f0fdf4;color:#15803d;">Energy</span></div>
+            </div>
+          </div>
+
+          <!-- Proposal -->
+          <div class="stage-col s-prop">
+            <div class="stage-head">Proposal <span class="stage-count">3</span></div>
+            <div class="deal-card" onclick="openDeal('Crestwood Health','Nadia Hassan','$320,000','Oct 31','HealthTech','Enterprise',70)">
+              <div class="deal-company">Crestwood Health</div>
+              <div class="deal-contact">Nadia Hassan · CIO</div>
+              <div class="deal-value">$320,000</div>
+              <div class="deal-close">Close: Oct 31</div>
+              <div class="deal-tags"><span class="tag" style="background:#ede9fe;color:#5b21b6;">HealthTech</span><span class="tag" style="background:#fef2f2;color:#b91c1c;">Urgent</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Titanium Retail','Dan Kim','$88,400','Nov 20','Retail','SMB',65)">
+              <div class="deal-company">Titanium Retail</div>
+              <div class="deal-contact">Dan Kim · CEO</div>
+              <div class="deal-value">$88,400</div>
+              <div class="deal-close">Close: Nov 20</div>
+              <div class="deal-tags"><span class="tag" style="background:#fef3c7;color:#92400e;">Retail</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Orion Logistics','Anna Bell','$142,000','Dec 15','Logistics','Enterprise',58)">
+              <div class="deal-company">Orion Logistics</div>
+              <div class="deal-contact">Anna Bell · VP Supply Chain</div>
+              <div class="deal-value">$142,000</div>
+              <div class="deal-close">Close: Dec 15</div>
+              <div class="deal-tags"><span class="tag" style="background:#dbeafe;color:#1e40af;">Logistics</span></div>
+            </div>
+          </div>
+
+          <!-- Negotiation -->
+          <div class="stage-col s-neg">
+            <div class="stage-head">Negotiation <span class="stage-count">2</span></div>
+            <div class="deal-card" onclick="openDeal('Sparc Studios','Leo Marsh','$195,000','Oct 25','Creative','Enterprise',80)">
+              <div class="deal-company">Sparc Studios</div>
+              <div class="deal-contact">Leo Marsh · COO</div>
+              <div class="deal-value">$195,000</div>
+              <div class="deal-close">Close: Oct 25</div>
+              <div class="deal-tags"><span class="tag" style="background:#fef3c7;color:#92400e;">Creative</span><span class="tag" style="background:#f0fdf4;color:#15803d;">Hot 🔥</span></div>
+            </div>
+            <div class="deal-card" onclick="openDeal('Quantex Corp','Felix Wong','$240,000','Nov 1','B2B SaaS','Enterprise',75)">
+              <div class="deal-company">Quantex Corp</div>
+              <div class="deal-contact">Felix Wong · Director</div>
+              <div class="deal-value">$240,000</div>
+              <div class="deal-close">Close: Nov 1</div>
+              <div class="deal-tags"><span class="tag" style="background:#ede9fe;color:#5b21b6;">B2B SaaS</span></div>
+            </div>
+          </div>
+
+          <!-- Closed Won -->
+          <div class="stage-col s-close">
+            <div class="stage-head">Closed Won <span class="stage-count">2</span></div>
+            <div class="deal-card" onclick="showToast('🎉 Meridian Analytics — Closed $98K!')">
+              <div class="deal-company">Meridian Analytics</div>
+              <div class="deal-contact">Clare Scott · COO</div>
+              <div class="deal-value">$98,000</div>
+              <div class="deal-close">Closed: Oct 3 ✅</div>
+              <div class="deal-tags"><span class="tag" style="background:#f0fdf4;color:#15803d;">Won</span></div>
+            </div>
+            <div class="deal-card" onclick="showToast('🎉 Platform Pro — Closed $107K!')">
+              <div class="deal-company">Platform Pro</div>
+              <div class="deal-contact">Mark Chen · CEO</div>
+              <div class="deal-value">$107,200</div>
+              <div class="deal-close">Closed: Oct 8 ✅</div>
+              <div class="deal-tags"><span class="tag" style="background:#f0fdf4;color:#15803d;">Won</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROCESS WALKTHROUGH TAB -->
+      <div id="tab-pipeline-process" style="display:none;">
+        <div class="process-section">
+          <div class="process-section-title">Lead-to-Close: The Sales Process</div>
+          <div class="process-section-sub">The most critical CRM workflow — follow an enterprise deal from first contact to signed contract in 5 stages</div>
+
+          <!-- STEP INDICATORS -->
+          <div class="process-steps" id="processSteps">
+            <div class="p-step active" onclick="goStep(0)">
+              <div class="p-circle" style="border-color:#2563eb;background:#eff6ff;">🎯</div>
+              <div class="p-step-label">Lead Capture</div>
+              <div class="p-step-sub">Awareness</div>
+            </div>
+            <div class="p-step" onclick="goStep(1)">
+              <div class="p-circle" style="border-color:#f97316;background:#fff7ed;">🔍</div>
+              <div class="p-step-label">Qualify</div>
+              <div class="p-step-sub">BANT Assessment</div>
+            </div>
+            <div class="p-step" onclick="goStep(2)">
+              <div class="p-circle" style="border-color:#7c3aed;background:#faf5ff;">📄</div>
+              <div class="p-step-label">Proposal</div>
+              <div class="p-step-sub">Solution Design</div>
+            </div>
+            <div class="p-step" onclick="goStep(3)">
+              <div class="p-circle" style="border-color:#d97706;background:#fffbeb;">🤝</div>
+              <div class="p-step-label">Negotiate</div>
+              <div class="p-step-sub">Terms & Pricing</div>
+            </div>
+            <div class="p-step" onclick="goStep(4)">
+              <div class="p-circle" style="border-color:#16a34a;background:#f0fdf4;">🏆</div>
+              <div class="p-step-label">Close</div>
+              <div class="p-step-sub">Contract Signed</div>
+            </div>
+          </div>
+
+          <!-- STEP DETAIL -->
+          <div id="processDetail"></div>
+
+        </div>
+      </div>
+    </div><!-- /view-pipeline -->
+
+    <!-- ══ CONTACTS VIEW ══ -->
+    <div class="view" id="view-contacts">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-l">Total Contacts</div>
+          <div class="kpi-v">1,248</div>
+          <div class="kpi-d"><span class="up">↑ 34</span> <span class="neutral">this month</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">Active Leads</div>
+          <div class="kpi-v">187</div>
+          <div class="kpi-d"><span class="up">↑ 12%</span> <span class="neutral">conversion</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">Customers</div>
+          <div class="kpi-v">342</div>
+          <div class="kpi-d"><span class="up">↑ 8</span> <span class="neutral">new accounts</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">Avg Response</div>
+          <div class="kpi-v">2.4h</div>
+          <div class="kpi-d"><span class="up">↓ 0.6h</span> <span class="neutral">improved</span></div>
+        </div>
+      </div>
+      <div class="contacts-grid">
+        <div class="contact-card" style="animation-delay:0s" onclick="showToast('👤 Opening Sarah Miller profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#2563eb;">SM</div>
+            <div><div class="cc-name">Sarah Miller</div><div class="cc-co">VP Operations · Acme Corp</div></div></div>
+          <div class="cc-fields"><span>✉️ s.miller@acme.com</span><span>📞 +1 415 555 0120</span></div>
+          <div class="cc-status" style="background:#dbeafe;color:#1e40af;">Lead</div>
+        </div>
+        <div class="contact-card" style="animation-delay:0.07s" onclick="showToast('👤 Opening Tom Carter profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#f97316;">TC</div>
+            <div><div class="cc-name">Tom Carter</div><div class="cc-co">CFO · BluePeak Finance</div></div></div>
+          <div class="cc-fields"><span>✉️ t.carter@bluepeak.io</span><span>📞 +1 212 555 0144</span></div>
+          <div class="cc-status" style="background:#fed7aa;color:#c2410c;">Qualified</div>
+        </div>
+        <div class="contact-card" style="animation-delay:0.14s" onclick="showToast('👤 Opening Nadia Hassan profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#7c3aed;">NH</div>
+            <div><div class="cc-name">Nadia Hassan</div><div class="cc-co">CIO · Crestwood Health</div></div></div>
+          <div class="cc-fields"><span>✉️ n.hassan@crestwood.com</span><span>📞 +1 617 555 0188</span></div>
+          <div class="cc-status" style="background:#ede9fe;color:#5b21b6;">Proposal</div>
+        </div>
+        <div class="contact-card" style="animation-delay:0.21s" onclick="showToast('👤 Opening Leo Marsh profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#d97706;">LM</div>
+            <div><div class="cc-name">Leo Marsh</div><div class="cc-co">COO · Sparc Studios</div></div></div>
+          <div class="cc-fields"><span>✉️ l.marsh@sparc.co</span><span>📞 +1 310 555 0162</span></div>
+          <div class="cc-status" style="background:#fde68a;color:#92400e;">Negotiation</div>
+        </div>
+        <div class="contact-card" style="animation-delay:0.28s" onclick="showToast('👤 Opening Clare Scott profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#16a34a;">CS</div>
+            <div><div class="cc-name">Clare Scott</div><div class="cc-co">COO · Meridian Analytics</div></div></div>
+          <div class="cc-fields"><span>✉️ c.scott@meridian.ai</span><span>📞 +1 650 555 0131</span></div>
+          <div class="cc-status" style="background:#bbf7d0;color:#15803d;">Customer</div>
+        </div>
+        <div class="contact-card" style="animation-delay:0.35s" onclick="showToast('👤 Opening Felix Wong profile...')">
+          <div class="cc-top"><div class="cc-av" style="background:#7c3aed;">FW</div>
+            <div><div class="cc-name">Felix Wong</div><div class="cc-co">Director BD · Quantex Corp</div></div></div>
+          <div class="cc-fields"><span>✉️ f.wong@quantex.com</span><span>📞 +1 408 555 0177</span></div>
+          <div class="cc-status" style="background:#ede9fe;color:#5b21b6;">Negotiation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ REPORTS VIEW ══ -->
+    <div class="view" id="view-reports">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-l">Q4 Revenue</div>
+          <div class="kpi-v">$412K</div>
+          <div class="kpi-d"><span class="up">↑ 18%</span> <span class="neutral">vs Q3</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">Quota Attainment</div>
+          <div class="kpi-v">94%</div>
+          <div class="kpi-d"><span class="neutral">Target $440K</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">New MRR</div>
+          <div class="kpi-v">$34.8K</div>
+          <div class="kpi-d"><span class="up">↑ 11%</span> <span class="neutral">MoM</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-l">Churn Rate</div>
+          <div class="kpi-v">2.1%</div>
+          <div class="kpi-d"><span class="up">↓ 0.4pp</span> <span class="neutral">improving</span></div>
+        </div>
+      </div>
+      <div class="reports-grid">
+        <div class="report-card">
+          <div class="report-title">Win Rate by Rep</div>
+          <div class="report-sub">Closed-won / total deals · Last 90 days</div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Jamie D.</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:52%;background:#e85d26;"></div></div>
+            <div class="mini-bar-val">52%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Rachel S.</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:47%;background:#2563eb;"></div></div>
+            <div class="mini-bar-val">47%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Marcus T.</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:38%;background:#7c3aed;"></div></div>
+            <div class="mini-bar-val">38%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Yuki H.</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:35%;background:#16a34a;"></div></div>
+            <div class="mini-bar-val">35%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Ben F.</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:29%;background:#d97706;"></div></div>
+            <div class="mini-bar-val">29%</div>
+          </div>
+        </div>
+        <div class="report-card">
+          <div class="report-title">Pipeline by Stage</div>
+          <div class="report-sub">Value distribution across active stages</div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Lead</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:76%;background:#2563eb;"></div></div>
+            <div class="mini-bar-val">$331K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Qualified</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:51%;background:#f97316;"></div></div>
+            <div class="mini-bar-val">$223K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Proposal</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%;background:#7c3aed;"></div></div>
+            <div class="mini-bar-val">$550K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Negotiation</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:80%;background:#d97706;"></div></div>
+            <div class="mini-bar-val">$435K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Closed</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:47%;background:#16a34a;"></div></div>
+            <div class="mini-bar-val">$205K</div>
+          </div>
+        </div>
+        <div class="report-card" style="animation-delay:.1s;">
+          <div class="report-title">Deal Source Breakdown</div>
+          <div class="report-sub">How deals enter the pipeline</div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Inbound Web</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:41%;background:#2563eb;"></div></div>
+            <div class="mini-bar-val">41%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Outbound SDR</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:28%;background:#e85d26;"></div></div>
+            <div class="mini-bar-val">28%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Referral</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:18%;background:#16a34a;"></div></div>
+            <div class="mini-bar-val">18%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Partner</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:9%;background:#7c3aed;"></div></div>
+            <div class="mini-bar-val">9%</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Event</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:4%;background:#d97706;"></div></div>
+            <div class="mini-bar-val">4%</div>
+          </div>
+        </div>
+        <div class="report-card" style="animation-delay:.15s;">
+          <div class="report-title">Average Deal Size by Segment</div>
+          <div class="report-sub">Enterprise vs mid-market vs SMB</div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Enterprise</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:100%;background:#e85d26;"></div></div>
+            <div class="mini-bar-val">$88K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">Mid-Market</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:50%;background:#2563eb;"></div></div>
+            <div class="mini-bar-val">$44K</div>
+          </div>
+          <div class="mini-bar-row">
+            <div class="mini-bar-label">SMB</div>
+            <div class="mini-bar-track"><div class="mini-bar-fill" style="width:14%;background:#7c3aed;"></div></div>
+            <div class="mini-bar-val">$12K</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DEAL DETAIL MODAL -->
+<div id="dealModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="closeDeal(event)">
+  <div style="background:#fff;border-radius:16px;width:520px;max-height:85vh;overflow-y:auto;padding:28px;box-shadow:0 24px 64px rgba(0,0,0,0.3);" onclick="e=>e.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px;">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;" id="modal-company">—</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;" id="modal-contact">—</div>
+      </div>
+      <button onclick="closeDealBtn()" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;">✕ Close</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:var(--bg);border-radius:8px;padding:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;">Value</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;" id="modal-value">—</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;">Close Date</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;" id="modal-close">—</div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;">Win Prob.</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;" id="modal-prob">—</div>
+      </div>
+    </div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Activity Log</div>
+    <div style="font-size:12px;color:#555;display:flex;flex-direction:column;gap:8px;">
+      <div style="background:var(--bg);border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:start;">
+        <span>📞</span><div><strong style="display:block;font-weight:700;">Discovery Call</strong><span style="color:var(--muted);">45 min · 2 days ago — Confirmed budget range, strong fit</span></div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:start;">
+        <span>✉️</span><div><strong style="display:block;font-weight:700;">Proposal Sent</strong><span style="color:var(--muted);">PDF + ROI deck · 5 days ago · Opened 3 times</span></div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:start;">
+        <span>🤝</span><div><strong style="display:block;font-weight:700;">Initial Meeting</strong><span style="color:var(--muted);">30 min intro · 12 days ago · Warm response</span></div>
+      </div>
+    </div>
+    <button onclick="closeDealBtn();showToast('✅ Deal moved to next stage!')" style="width:100%;margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">Move to Next Stage →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Action completed</span>
+</div>
+
+<script>
+// ── PROCESS STEPS DATA ─────────────────────────────────────────────────────
+const STEPS = [
+  {
+    stage:'Lead Capture', color:'#2563eb', bgColor:'#eff6ff',
+    badge:'Stage 01 · Lead', badgeBg:'#dbeafe', badgeColor:'#1e40af',
+    title:'Capture & Enrich the Lead',
+    desc:'A potential buyer submits a form, attends a webinar, or is sourced by an SDR. The CRM automatically creates a contact, enriches firmographic data (company size, industry, tech stack), and assigns the lead to the right rep based on territory rules.',
+    actions:[
+      {icon:'📋',bg:'#eff6ff',title:'Auto-create contact record',sub:'Enriched from LinkedIn + Clearbit data'},
+      {icon:'🔔',bg:'#eff6ff',title:'Notify assigned rep',sub:'Slack + email · Response target: 2 hours'},
+      {icon:'📊',bg:'#eff6ff',title:'Lead scoring applied',sub:'Score: 74/100 · Based on ICP fit + intent signals'},
+    ],
+    record:{name:'Sarah Miller',title:'VP Operations · Acme Corp',bg:'#2563eb',value:'$84,000',stage:'Lead',prob:20,source:'Inbound web form',industry:'SaaS'},
+    activities:[
+      {icon:'🌐',bg:'#dbeafe',title:'Web form submitted',meta:'acmecorp.com/demo · 3 days ago'},
+      {icon:'🤖',bg:'#dbeafe',title:'Lead enriched by AI',meta:'22 data points added · Clearbit + LinkedIn'},
+      {icon:'👤',bg:'#dbeafe',title:'Assigned to Jamie D.',meta:'Territory: West · 3 days ago'},
+    ]
+  },
+  {
+    stage:'Qualification', color:'#f97316', bgColor:'#fff7ed',
+    badge:'Stage 02 · Qualified', badgeBg:'#fed7aa', badgeColor:'#c2410c',
+    title:'BANT Qualification Call',
+    desc:'The rep runs a structured discovery call using the BANT framework — Budget, Authority, Need, Timeline. The CRM captures call notes, auto-generates a qualification score, and flags whether to advance or disqualify the lead. Only 1 in 3 leads passes this gate.',
+    actions:[
+      {icon:'📞',bg:'#fff7ed',title:'Log discovery call',sub:'45 min · Auto-transcribed · Key insights extracted'},
+      {icon:'✅',bg:'#fff7ed',title:'Complete BANT checklist',sub:'Budget: $80-100K ✓ · Authority: VP ✓ · Need: Critical ✓'},
+      {icon:'📈',bg:'#fff7ed',title:'Qualification score updated',sub:'Score: 82/100 · Advance to Proposal'},
+    ],
+    record:{name:'Sarah Miller',title:'VP Operations · Acme Corp',bg:'#f97316',value:'$84,000',stage:'Qualified',prob:40,source:'Inbound web form',industry:'SaaS'},
+    activities:[
+      {icon:'📞',bg:'#fed7aa',title:'Discovery call completed',meta:'45 min · Sarah confirmed $80-100K budget range'},
+      {icon:'📝',bg:'#fed7aa',title:'BANT notes logged',meta:'All 4 criteria confirmed · Score: 82/100'},
+      {icon:'⬆️',bg:'#fed7aa',title:'Moved to Qualified',meta:'By Jamie D. · 1 day ago'},
+    ]
+  },
+  {
+    stage:'Proposal', color:'#7c3aed', bgColor:'#faf5ff',
+    badge:'Stage 03 · Proposal', badgeBg:'#ede9fe', badgeColor:'#5b21b6',
+    title:'Craft & Send the Proposal',
+    desc:'The rep uses CRM templates to generate a tailored proposal with ROI modelling, case studies, and pricing tiers. The document is sent directly from the CRM — which tracks opens, time spent, and page-by-page engagement. Every view triggers an alert.',
+    actions:[
+      {icon:'📄',bg:'#faf5ff',title:'Generate proposal from template',sub:'Custom ROI model · Acme-specific case studies included'},
+      {icon:'📤',bg:'#faf5ff',title:'Send tracked proposal',sub:'Opened 3x · 7 min avg read time · Page 4 most viewed'},
+      {icon:'🗓️',bg:'#faf5ff',title:'Schedule proposal review call',sub:'Booked: Oct 24 · 2pm PST · Calendar sync done'},
+    ],
+    record:{name:'Sarah Miller',title:'VP Operations · Acme Corp',bg:'#7c3aed',value:'$84,000',stage:'Proposal Sent',prob:60,source:'Inbound web form',industry:'SaaS'},
+    activities:[
+      {icon:'📄',bg:'#ede9fe',title:'Proposal generated',meta:'3-tier pricing · ROI projection: 340% in Year 1'},
+      {icon:'👁️',bg:'#ede9fe',title:'Proposal opened',meta:'3 opens · 7 min total · Forwarded to CFO'},
+      {icon:'🗓️',bg:'#ede9fe',title:'Review call booked',meta:'Oct 24 · 2pm PST · Sarah + CFO attending'},
+    ]
+  },
+  {
+    stage:'Negotiation', color:'#d97706', bgColor:'#fffbeb',
+    badge:'Stage 04 · Negotiation', badgeBg:'#fde68a', badgeColor:'#92400e',
+    title:'Negotiate Terms & Pricing',
+    desc:'Both parties align on contract terms, pricing, SLAs, and start dates. The CRM flags any discount requests that exceed rep authority, routes to manager approval, and generates redlined contract versions. Deal risk score is calculated in real-time.',
+    actions:[
+      {icon:'💬',bg:'#fffbeb',title:'Log counter-offer',sub:'Sarah requested 15% discount · Manager approval required'},
+      {icon:'✍️',bg:'#fffbeb',title:'Send contract for e-signature',sub:'DocuSign integration · Auto-generated from CRM terms'},
+      {icon:'🚨',bg:'#fffbeb',title:'Deal risk alert triggered',sub:'No activity in 4 days · Auto-follow-up sent'},
+    ],
+    record:{name:'Sarah Miller',title:'VP Operations · Acme Corp',bg:'#d97706',value:'$79,800',stage:'Negotiating',prob:80,source:'Inbound web form',industry:'SaaS'},
+    activities:[
+      {icon:'💬',bg:'#fde68a',title:'Counter-offer received',meta:'Sarah: 10% discount + extended payment terms'},
+      {icon:'✅',bg:'#fde68a',title:'Discount approved',meta:'Manager approved 10% · Final value: $79,800'},
+      {icon:'✍️',bg:'#fde68a',title:'Contract sent for signature',meta:'DocuSign · Sent Oct 22 · Awaiting sign'},
+    ]
+  },
+  {
+    stage:'Closed Won', color:'#16a34a', bgColor:'#f0fdf4',
+    badge:'Stage 05 · Closed Won 🏆', badgeBg:'#bbf7d0', badgeColor:'#15803d',
+    title:'Deal Closed — Revenue Booked',
+    desc:'Contract is signed. The CRM automatically triggers onboarding workflows, creates a customer success handoff task, sends a welcome email sequence, updates revenue forecasts, and logs the win for team recognition. The flywheel continues — this customer is now a potential referral source.',
+    actions:[
+      {icon:'🎉',bg:'#f0fdf4',title:'Deal marked Closed Won',sub:'$79,800 booked · Forecast updated automatically'},
+      {icon:'🚀',bg:'#f0fdf4',title:'Onboarding workflow triggered',sub:'6-step sequence · CSM assigned: Rachel S.'},
+      {icon:'📣',bg:'#f0fdf4',title:'Win posted to team Slack',sub:'#wins channel · 🎉 from 12 teammates'},
+    ],
+    record:{name:'Sarah Miller',title:'VP Operations · Acme Corp',bg:'#16a34a',value:'$79,800',stage:'🏆 Closed Won',prob:100,source:'Inbound web form',industry:'SaaS'},
+    activities:[
+      {icon:'✍️',bg:'#bbf7d0',title:'Contract signed',meta:'DocuSign completed · Both parties · Oct 23'},
+      {icon:'🚀',bg:'#bbf7d0',title:'Onboarding started',meta:'Welcome email sent · Kickoff booked Nov 1'},
+      {icon:'📣',bg:'#bbf7d0',title:'Win recognised',meta:'Shared in #wins · Q4 quota +18%'},
+    ]
+  }
+];
+
+let currentStep = 0;
+
+function renderStep(i) {
+  const s = STEPS[i];
+  const steps = document.querySelectorAll('.p-step');
+  steps.forEach((el, idx) => {
+    el.classList.remove('active','done');
+    if(idx < i) el.classList.add('done');
+    if(idx === i) el.classList.add('active');
+  });
+
+  document.getElementById('processDetail').innerHTML = `
+    <div class="process-detail">
+      <div class="pd-left">
+        <div class="pd-stage-badge" style="background:${s.badgeBg};color:${s.badgeColor};">${s.badge}</div>
+        <div class="pd-title">${s.title}</div>
+        <div class="pd-desc">${s.desc}</div>
+        <div class="pd-actions">
+          ${s.actions.map(a=>`
+          <div class="pd-action" onclick="showToast('✅ ${a.title}')">
+            <div class="pd-action-icon" style="background:${a.bg};">${a.icon}</div>
+            <div class="pd-action-text">
+              <strong>${a.title}</strong>
+              <span>${a.sub}</span>
+            </div>
+          </div>`).join('')}
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn nav-btn-prev" ${i===0?'disabled':''} onclick="goStep(${i-1})">← Previous Stage</button>
+          <button class="nav-btn nav-btn-next" onclick="${i===4?`showToast('🏆 Process complete! The deal is won.')`:  `goStep(${i+1})`}">${i===4?'🎉 Start New Deal':'Next Stage →'}</button>
+        </div>
+      </div>
+      <div class="pd-right">
+        <div class="record-card">
+          <div class="record-card-header">
+            <div class="rec-av" style="background:${s.record.bg};">${s.record.name.split(' ').map(x=>x[0]).join('')}</div>
+            <div>
+              <div class="rec-name">${s.record.name}</div>
+              <div class="rec-title">${s.record.title}</div>
+            </div>
+          </div>
+          <div class="rec-fields">
+            <div class="rec-field">
+              <div class="rec-field-l">Deal Value</div>
+              <div class="rec-field-v" style="font-family:'Syne',sans-serif;">${s.record.value}</div>
+            </div>
+            <div class="rec-field">
+              <div class="rec-field-l">Stage</div>
+              <div class="rec-field-v">${s.record.stage}</div>
+            </div>
+            <div class="rec-field">
+              <div class="rec-field-l">Source</div>
+              <div class="rec-field-v">${s.record.source}</div>
+            </div>
+            <div class="rec-field">
+              <div class="rec-field-l">Industry</div>
+              <div class="rec-field-v">${s.record.industry}</div>
+            </div>
+          </div>
+          <div class="prob-row">
+            <div class="prob-label">Win probability</div>
+            <div class="prob-track"><div class="prob-fill" style="width:${s.record.prob}%;background:${s.record.bg};"></div></div>
+            <div class="prob-val" style="color:${s.record.bg};">${s.record.prob}%</div>
+          </div>
+          <div class="rec-divider"></div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;">Activity Timeline</div>
+          <div class="activity-list">
+            ${s.activities.map(a=>`
+            <div class="activity-item">
+              <div class="a-dot" style="background:${a.bg};">${a.icon}</div>
+              <div class="a-body">
+                <div class="a-title">${a.title}</div>
+                <div class="a-meta">${a.meta}</div>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function goStep(i) {
+  currentStep = i;
+  renderStep(i);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+const VIEWS = ['pipeline','contacts','reports'];
+const VIEW_TITLES = { pipeline:'Sales Pipeline', contacts:'Contacts', reports:'Reports' };
+
+function switchView(view, el) {
+  VIEWS.forEach(v => {
+    const el2 = document.getElementById('view-'+v);
+    if(el2) el2.classList.remove('active');
+  });
+  const target = document.getElementById('view-'+view);
+  if(target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pageTitle').textContent = VIEW_TITLES[view] || view;
+
+  // Show/hide tab bar
+  const tabBar = document.getElementById('tabBar');
+  tabBar.style.display = view === 'pipeline' ? 'flex' : 'none';
+}
+
+const TABS = {
+  'pipeline-overview': 'tab-pipeline-overview',
+  'pipeline-process': 'tab-pipeline-process',
+};
+
+function switchTab(tab, el) {
+  Object.values(TABS).forEach(id => {
+    const el2 = document.getElementById(id);
+    if(el2) el2.style.display = 'none';
+  });
+  const target = document.getElementById(TABS[tab]);
+  if(target) { target.style.display = 'block'; }
+
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  if(tab === 'pipeline-process') renderStep(currentStep);
+}
+
+// ── DEAL MODAL ─────────────────────────────────────────────────────────────
+function openDeal(company, contact, value, closeDate, tag, seg, prob) {
+  document.getElementById('modal-company').textContent = company;
+  document.getElementById('modal-contact').textContent = contact;
+  document.getElementById('modal-value').textContent = value;
+  document.getElementById('modal-close').textContent = closeDate;
+  document.getElementById('modal-prob').textContent = prob + '%';
+  document.getElementById('dealModal').style.display = 'flex';
+}
+function closeDeal(e) {
+  if(e.target === document.getElementById('dealModal')) closeDealBtn();
+}
+function closeDealBtn() {
+  document.getElementById('dealModal').style.display = 'none';
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  const parts = msg.split(' ');
+  document.getElementById('toast-icon').textContent = parts[0];
+  document.getElementById('toast-msg').textContent = parts.slice(1).join(' ');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

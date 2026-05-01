@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainOS — Supply Chain Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --surface: #0f1218;
+  --surface2: #161b24;
+  --surface3: #1e2535;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8edf5;
+  --text2: #8b95a8;
+  --text3: #555f72;
+  --accent: #00d4aa;
+  --accent2: #0ea5e9;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --green: #22c55e;
+  --purple: #a855f7;
+  --orange: #f97316;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:13px;}
+
+/* grid bg texture */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,212,170,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,170,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── TOP BAR ─────────────────────────────────────────────── */
+.topbar{
+  position:relative;z-index:10;
+  height:52px;background:var(--surface);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 20px;gap:0;
+  flex-shrink:0;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  padding-right:20px;border-right:1px solid var(--border2);
+  margin-right:4px;
+}
+.logo-mark{
+  width:28px;height:28px;border-radius:6px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;font-weight:600;color:#000;
+}
+.logo-text{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.02em;}
+.logo-text span{color:var(--accent);}
+
+.nav-items{display:flex;height:52px;margin-left:4px;}
+.nav-item{
+  display:flex;align-items:center;padding:0 16px;
+  font-size:12px;font-weight:500;color:var(--text2);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+.nav-item.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.status-pill{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);
+  border-radius:20px;padding:4px 10px;
+  font-family:var(--mono);font-size:10px;color:var(--green);font-weight:500;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tb-btn{
+  padding:6px 14px;border-radius:5px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text2);font-family:var(--sans);
+  transition:all .15s;
+}
+.tb-btn:hover{border-color:var(--accent);color:var(--accent);}
+.tb-btn-accent{background:var(--accent);color:#000;border-color:var(--accent);}
+.tb-btn-accent:hover{background:#00b896;border-color:#00b896;color:#000;}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.layout{display:flex;flex:1;overflow:hidden;position:relative;z-index:1;}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.sidebar{
+  width:48px;background:var(--surface);border-right:1px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 0;gap:2px;flex-shrink:0;
+}
+.sb-item{
+  width:36px;height:36px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+}
+.sb-item:hover{background:var(--surface2);border-color:var(--border2);}
+.sb-item.active{background:rgba(0,212,170,0.1);border-color:rgba(0,212,170,0.3);}
+
+/* ── CONTENT ─────────────────────────────────────────────── */
+.content{flex:1;overflow-y:auto;padding:20px;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-track{background:transparent;}
+.content::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:2px;}
+
+.view{display:none;}
+.view.active{display:block;}
+
+/* ── PAGE HEADER ─────────────────────────────────────────── */
+.page-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+.page-hd-left{}
+.page-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.page-title{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.02em;}
+.page-sub{font-size:12px;color:var(--text2);margin-top:3px;}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.card{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;overflow:hidden;
+  animation:fadeUp .35s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card-hd{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
+.card-title .ico{font-size:15px;}
+.card-sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.card-body{padding:18px;}
+.card-actions{display:flex;gap:6px;align-items:center;}
+
+/* ── KPI STRIP ───────────────────────────────────────────── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.kpi{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;
+  animation:fadeUp .35s ease both;
+}
+.kpi::before{content:'';position:absolute;inset:0;background:var(--glow,transparent);opacity:.04;}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--accent));}
+.kpi-label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.kpi-val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--text);letter-spacing:-.03em;}
+.kpi-delta{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:5px;}
+.up{color:var(--green);}
+.dn{color:var(--red);}
+.flat{color:var(--text2);}
+
+/* ── TABLE ───────────────────────────────────────────────── */
+.sc-table{width:100%;border-collapse:collapse;}
+.sc-table thead th{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--text3);
+  padding:8px 12px;text-align:left;
+  border-bottom:1px solid var(--border2);white-space:nowrap;
+}
+.sc-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.sc-table tbody tr:hover{background:var(--surface2);}
+.sc-table tbody td{padding:10px 12px;color:var(--text);vertical-align:middle;}
+.sc-link{color:var(--accent2);font-weight:600;font-family:var(--mono);font-size:12px;}
+
+/* ── BADGES ──────────────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:4px;
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  white-space:nowrap;
+}
+.b-green{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.b-amber{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.b-red{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.b-blue{background:rgba(14,165,233,.12);color:var(--accent2);border:1px solid rgba(14,165,233,.2);}
+.b-accent{background:rgba(0,212,170,.12);color:var(--accent);border:1px solid rgba(0,212,170,.2);}
+.b-purple{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.2);}
+.b-orange{background:rgba(249,115,22,.12);color:var(--orange);border:1px solid rgba(249,115,22,.2);}
+
+/* ── SPARKLINE ───────────────────────────────────────────── */
+.spark{display:flex;align-items:flex-end;gap:2px;height:24px;}
+.spark-bar{flex:1;border-radius:2px 2px 0 0;min-height:3px;}
+
+/* ── GAUGE ───────────────────────────────────────────────── */
+.gauge-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.gauge-label{font-size:12px;color:var(--text2);width:140px;flex-shrink:0;}
+.gauge-track{flex:1;height:6px;background:var(--surface3);border-radius:99px;overflow:hidden;}
+.gauge-fill{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.22,.68,0,1.2);}
+.gauge-val{font-family:var(--mono);font-size:11px;font-weight:500;width:40px;text-align:right;}
+
+/* ── MAP NODES ───────────────────────────────────────────── */
+.supply-map{
+  background:var(--surface2);border-radius:8px;
+  padding:20px;position:relative;min-height:180px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:0;overflow:hidden;
+}
+.supply-map::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(0,212,170,.02) 60px,rgba(0,212,170,.02) 61px);
+}
+.map-node{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  position:relative;z-index:1;flex:1;
+}
+.node-circle{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;border:2px solid;
+  transition:all .3s;cursor:pointer;
+}
+.node-circle:hover{transform:scale(1.08);}
+.node-label{font-family:var(--mono);font-size:10px;color:var(--text2);text-align:center;max-width:80px;}
+.node-status{font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;margin-top:1px;}
+.map-arrow{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+}
+.map-arrow::before{
+  content:'';display:block;height:2px;width:100%;
+  background:linear-gradient(90deg,transparent,var(--border2),transparent);
+}
+.map-arrow-head{position:absolute;right:0;font-size:10px;color:var(--text3);}
+.flow-dot{
+  width:8px;height:8px;border-radius:50%;
+  position:absolute;background:var(--accent);
+  animation:flowAnim 2.5s linear infinite;
+  top:50%;transform:translateY(-50%);
+}
+@keyframes flowAnim{0%{left:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+
+/* ── PROCESS WALKTHROUGH ─────────────────────────────────── */
+.process-shell{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;overflow:hidden;
+}
+.process-banner{
+  background:linear-gradient(135deg,#0a1628 0%,#0f2040 50%,#091c36 100%);
+  padding:24px 28px;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border2);
+}
+.process-banner::after{
+  content:'P2P';position:absolute;right:-10px;top:-10px;
+  font-family:var(--mono);font-size:100px;font-weight:700;
+  color:rgba(0,212,170,0.04);letter-spacing:-.04em;
+  pointer-events:none;
+}
+.pb-tag{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+.pb-title{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:4px;}
+.pb-sub{font-size:13px;color:var(--text2);}
+
+/* Step rail */
+.step-rail{
+  display:flex;background:var(--surface2);
+  border-bottom:1px solid var(--border2);overflow-x:auto;
+}
+.step-rail::-webkit-scrollbar{height:0;}
+.s-item{
+  flex:1;min-width:90px;padding:14px 8px;
+  text-align:center;cursor:pointer;transition:background .15s;
+  border-right:1px solid var(--border);position:relative;
+}
+.s-item:last-child{border-right:none;}
+.s-item:hover{background:var(--surface3);}
+.s-item.active{background:var(--surface);}
+.s-item.done .s-num{background:var(--green)!important;color:#000;}
+.s-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--surface3);color:var(--text3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  margin:0 auto 5px;transition:all .2s;
+}
+.s-item.active .s-num{background:var(--accent);color:#000;box-shadow:0 0 0 3px rgba(0,212,170,.2);}
+.s-label{font-size:10px;font-weight:600;color:var(--text3);line-height:1.3;}
+.s-item.active .s-label{color:var(--accent);}
+.s-item.done .s-label{color:var(--green);}
+
+/* Step body */
+.step-body{padding:24px 28px;}
+.step-grid{display:grid;grid-template-columns:1fr 300px;gap:24px;}
+.s-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 10px;border-radius:4px;
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  margin-bottom:12px;
+}
+.s-title{font-size:19px;font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:6px;}
+.s-desc{font-size:13px;color:#8b95a8;line-height:1.65;margin-bottom:18px;}
+.s-actions{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+.s-action{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:7px;padding:10px 14px;cursor:pointer;
+  transition:all .15s;
+}
+.s-action:hover{border-color:var(--accent);background:rgba(0,212,170,.04);}
+.s-action-ico{
+  width:30px;height:30px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+}
+.s-action-t{font-size:12px;font-weight:600;color:var(--text);}
+.s-action-s{font-size:11px;color:var(--text2);margin-top:1px;}
+.nav-btns{display:flex;gap:8px;}
+.nav-btn{
+  padding:8px 18px;border-radius:6px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid;font-family:var(--sans);transition:all .15s;
+}
+.nb-prev{background:transparent;color:var(--text2);border-color:var(--border2);}
+.nb-prev:hover{border-color:var(--accent);color:var(--accent);}
+.nb-next{background:var(--accent);color:#000;border-color:var(--accent);}
+.nb-next:hover{background:#00b896;}
+.nb-next:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Record panel */
+.rec-panel{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;overflow:hidden;
+}
+.rec-top{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.rec-av{
+  width:36px;height:36px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.rec-name{font-size:13px;font-weight:700;color:var(--text);}
+.rec-sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.rec-body{padding:14px 16px;}
+.rec-fields{display:flex;flex-direction:column;gap:8px;}
+.rec-field{display:flex;justify-content:space-between;align-items:center;}
+.rf-label{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.rf-val{font-size:12px;font-weight:600;color:var(--text);}
+.rec-div{height:1px;background:var(--border);margin:10px 0;}
+.rec-tl{display:flex;flex-direction:column;gap:8px;}
+.tl-item{display:flex;gap:8px;align-items:flex-start;}
+.tl-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.tl-title{font-size:12px;font-weight:600;color:var(--text);}
+.tl-meta{font-size:11px;color:var(--text2);margin-top:1px;}
+.prog-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.prog-label{font-size:11px;color:var(--text2);width:80px;flex-shrink:0;}
+.prog-track{flex:1;height:5px;background:var(--surface3);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.prog-val{font-family:var(--mono);font-size:11px;width:32px;text-align:right;}
+
+/* ── GRID LAYOUTS ────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.g3-1{display:grid;grid-template-columns:2fr 1fr;gap:14px;}
+.mb14{margin-bottom:14px;}
+
+/* ── MINI TABLE ──────────────────────────────────────────── */
+.mini-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;
+  cursor:pointer;transition:color .1s;
+}
+.mini-row:last-child{border-bottom:none;}
+.mini-row:hover{color:var(--accent);}
+.mini-left{display:flex;align-items:center;gap:8px;}
+.mini-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── ALERT STRIP ─────────────────────────────────────────── */
+.alerts{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.alert{
+  flex:1;min-width:200px;display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--border2);
+  border-left:3px solid;border-radius:8px;padding:12px 14px;
+}
+.a-warn{border-left-color:var(--amber);}
+.a-red{border-left-color:var(--red);}
+.a-green{border-left-color:var(--green);}
+.a-blue{border-left-color:var(--accent2);}
+.alert-ico{font-size:16px;flex-shrink:0;}
+.alert-t{font-size:12px;font-weight:600;color:var(--text);}
+.alert-s{font-size:11px;color:var(--text2);margin-top:2px;}
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:20px;right:20px;
+  background:var(--surface);border:1px solid var(--accent);color:var(--text);
+  padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+  transform:translateY(60px);opacity:0;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:1000;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  font-family:var(--mono);
+}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ── SUPPLIER CARDS ──────────────────────────────────────── */
+.supplier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.sup-card{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:8px;padding:16px;cursor:pointer;
+  transition:border-color .15s;
+}
+.sup-card:hover{border-color:var(--accent);}
+.sup-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.sup-cat{font-size:11px;color:var(--text2);margin-bottom:10px;}
+.sup-score{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.sup-score-label{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.sup-score-val{font-family:var(--mono);font-size:11px;font-weight:600;}
+
+/* ── INVENTORY HEATROW ───────────────────────────────────── */
+.heat-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.heat-label{font-size:12px;color:var(--text);width:130px;flex-shrink:0;}
+.heat-bar{flex:1;height:10px;background:var(--surface3);border-radius:3px;overflow:hidden;}
+.heat-fill{height:100%;border-radius:3px;}
+.heat-val{font-family:var(--mono);font-size:11px;color:var(--text2);width:44px;text-align:right;}
+.heat-status{font-size:10px;width:56px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ─────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">C</div>
+    <div class="logo-text">Chain<span>OS</span></div>
+  </div>
+  <nav class="nav-items">
+    <div class="nav-item active" onclick="switchNav('overview',this)">Overview</div>
+    <div class="nav-item" onclick="switchNav('procurement',this)">Procurement</div>
+    <div class="nav-item" onclick="switchNav('inventory',this)">Inventory</div>
+    <div class="nav-item" onclick="switchNav('suppliers',this)">Suppliers</div>
+    <div class="nav-item" onclick="switchNav('logistics',this)">Logistics</div>
+    <div class="nav-item" onclick="switchNav('analytics',this)">Analytics</div>
+  </nav>
+  <div class="topbar-right">
+    <div class="status-pill"><div class="live-dot"></div>All Systems Live</div>
+    <button class="tb-btn" onclick="showToast('🔔 4 new alerts')">🔔 Alerts <span style="background:var(--red);color:#fff;border-radius:10px;padding:1px 5px;font-size:9px;margin-left:2px;">4</span></button>
+    <button class="tb-btn tb-btn-accent" onclick="showToast('✅ New PO created')">+ New PO</button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar icons -->
+  <aside class="sidebar">
+    <div class="sb-item active" onclick="showToast('🏠 Overview')">🏭</div>
+    <div class="sb-item" onclick="showToast('📋 Purchase Orders')">📋</div>
+    <div class="sb-item" onclick="showToast('📦 Warehouses')">📦</div>
+    <div class="sb-item" onclick="showToast('🚚 Shipments')">🚚</div>
+    <div class="sb-item" onclick="showToast('🤝 Supplier Portal')">🤝</div>
+    <div class="sb-item" onclick="showToast('📊 Analytics')">📊</div>
+    <div class="sb-item" onclick="showToast('⚠️ Risk Monitor')">⚠️</div>
+    <div class="sb-item" onclick="showToast('⚙️ Settings')">⚙️</div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="content">
+
+    <!-- ══ OVERVIEW ══════════════════════════════════════════ -->
+    <div id="nav-overview" class="view active">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-tag">// supply chain intelligence</div>
+          <div class="page-title">Global Operations Dashboard</div>
+          <div class="page-sub">Real-time visibility across 47 suppliers · 8 warehouses · 3 continents</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="tb-btn" onclick="switchNav('procurement',document.querySelectorAll('.nav-item')[1])">View P2P Process →</button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alerts">
+        <div class="alert a-red">
+          <div class="alert-ico">🚨</div>
+          <div><div class="alert-t">Supplier delay — TechParts Asia</div><div class="alert-s">PO-2847 · Microchips · 14 days overdue · Escalate</div></div>
+        </div>
+        <div class="alert a-warn">
+          <div class="alert-ico">⚠️</div>
+          <div><div class="alert-t">Low stock — Circuit Boards (SKU-4421)</div><div class="alert-s">12 units remaining · Reorder point: 50 · Auto-PO triggered</div></div>
+        </div>
+        <div class="alert a-green">
+          <div class="alert-ico">✅</div>
+          <div><div class="alert-t">Shipment SHP-9183 delivered</div><div class="alert-s">Raw Aluminium · 4.2 tonnes · 2 days ahead of schedule</div></div>
+        </div>
+        <div class="alert a-blue">
+          <div class="alert-ico">💡</div>
+          <div><div class="alert-t">AI forecast: demand +22% in Q4</div><div class="alert-s">Recommend increasing safety stock by 300 units</div></div>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-strip">
+        <div class="kpi" style="--kpi-color:var(--accent);animation-delay:.05s">
+          <div class="kpi-accent"></div>
+          <div class="kpi-label">On-Time Delivery</div>
+          <div class="kpi-val">94.2<span style="font-size:16px;">%</span></div>
+          <div class="kpi-delta"><span class="up">↑ 3.1pp</span><span class="flat">vs last quarter</span></div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--accent2);animation-delay:.1s">
+          <div class="kpi-accent"></div>
+          <div class="kpi-label">Active POs</div>
+          <div class="kpi-val">143</div>
+          <div class="kpi-delta"><span class="up">↑ 18</span><span class="flat">this month</span></div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber);animation-delay:.15s">
+          <div class="kpi-accent"></div>
+          <div class="kpi-label">Inventory Turnover</div>
+          <div class="kpi-val">8.4<span style="font-size:16px;">x</span></div>
+          <div class="kpi-delta"><span class="dn">↓ 0.3x</span><span class="flat">below target 9x</span></div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green);animation-delay:.2s">
+          <div class="kpi-accent"></div>
+          <div class="kpi-label">Procurement Spend</div>
+          <div class="kpi-val">$4.2<span style="font-size:16px;">M</span></div>
+          <div class="kpi-delta"><span class="up">↓ 8%</span><span class="flat">cost savings YTD</span></div>
+        </div>
+      </div>
+
+      <!-- Supply chain map + Inventory -->
+      <div class="g3-1 mb14">
+        <div class="card" style="animation-delay:.25s">
+          <div class="card-hd">
+            <div><div class="card-title"><span class="ico">🗺️</span> Live Supply Chain Network</div><div class="card-sub">End-to-end flow · Click nodes to inspect</div></div>
+          </div>
+          <div class="card-body">
+            <div class="supply-map">
+              <div class="map-node">
+                <div class="node-circle" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.4);" onclick="showToast('🤝 Suppliers: 47 active globally')">🏭</div>
+                <div class="node-label">Raw Material Suppliers</div>
+                <div class="node-status" style="background:rgba(34,197,94,.15);color:var(--green);">47 ACTIVE</div>
+              </div>
+              <div class="map-arrow" style="position:relative;">
+                <div class="flow-dot" style="animation-delay:0s;"></div>
+              </div>
+              <div class="map-node">
+                <div class="node-circle" style="background:rgba(14,165,233,.1);border-color:rgba(14,165,233,.4);" onclick="showToast('🏗️ Manufacturing: 3 plants running')">🏗️</div>
+                <div class="node-label">Manufacturing Plants</div>
+                <div class="node-status" style="background:rgba(14,165,233,.15);color:var(--accent2);">3 PLANTS</div>
+              </div>
+              <div class="map-arrow" style="position:relative;">
+                <div class="flow-dot" style="animation-delay:.8s;"></div>
+              </div>
+              <div class="map-node">
+                <div class="node-circle" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.4);" onclick="showToast('📦 Warehouses: 8 locations')">📦</div>
+                <div class="node-label">Distribution Centres</div>
+                <div class="node-status" style="background:rgba(245,158,11,.15);color:var(--amber);">8 HUBS</div>
+              </div>
+              <div class="map-arrow" style="position:relative;">
+                <div class="flow-dot" style="animation-delay:1.6s;"></div>
+              </div>
+              <div class="map-node">
+                <div class="node-circle" style="background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.4);" onclick="showToast('🛒 Customers: 1,240 active accounts')">🛒</div>
+                <div class="node-label">End Customers</div>
+                <div class="node-status" style="background:rgba(0,212,170,.15);color:var(--accent);">1,240</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="animation-delay:.3s">
+          <div class="card-hd"><div class="card-title"><span class="ico">📊</span> Supplier Performance</div></div>
+          <div class="card-body">
+            <div class="gauge-row"><div class="gauge-label">Quality Rating</div><div class="gauge-track"><div class="gauge-fill" style="width:94%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);">94%</div></div>
+            <div class="gauge-row"><div class="gauge-label">On-Time Delivery</div><div class="gauge-track"><div class="gauge-fill" style="width:88%;background:var(--accent2);"></div></div><div class="gauge-val" style="color:var(--accent2);">88%</div></div>
+            <div class="gauge-row"><div class="gauge-label">Cost Compliance</div><div class="gauge-track"><div class="gauge-fill" style="width:97%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);">97%</div></div>
+            <div class="gauge-row"><div class="gauge-label">Risk Score</div><div class="gauge-track"><div class="gauge-fill" style="width:72%;background:var(--amber);"></div></div><div class="gauge-val" style="color:var(--amber);">Low</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active POs + inventory -->
+      <div class="g2">
+        <div class="card" style="animation-delay:.35s">
+          <div class="card-hd">
+            <div class="card-title"><span class="ico">📋</span> Latest Purchase Orders</div>
+            <button class="tb-btn" onclick="switchNav('procurement',document.querySelectorAll('.nav-item')[1])">View All →</button>
+          </div>
+          <div class="card-body" style="padding:0 18px 14px;">
+            <div class="mini-row" onclick="showToast('📋 PO-2851 — $48K · Pending approval')"><div class="mini-left"><div class="mini-dot" style="background:var(--amber);"></div><span class="sc-link">PO-2851</span><span style="color:var(--text2);">· TechParts Asia</span></div><div style="display:flex;align-items:center;gap:8px;"><span class="badge b-amber">Pending</span><span style="font-family:var(--mono);font-size:11px;">$48,200</span></div></div>
+            <div class="mini-row" onclick="showToast('📋 PO-2850 — $22K · Approved')"><div class="mini-left"><div class="mini-dot" style="background:var(--green);"></div><span class="sc-link">PO-2850</span><span style="color:var(--text2);">· MetalWorks EU</span></div><div style="display:flex;align-items:center;gap:8px;"><span class="badge b-green">Approved</span><span style="font-family:var(--mono);font-size:11px;">$22,500</span></div></div>
+            <div class="mini-row" onclick="showToast('📋 PO-2849 — $91K · In Transit')"><div class="mini-left"><div class="mini-dot" style="background:var(--accent2);"></div><span class="sc-link">PO-2849</span><span style="color:var(--text2);">· GreenRaw Ltd</span></div><div style="display:flex;align-items:center;gap:8px;"><span class="badge b-blue">In Transit</span><span style="font-family:var(--mono);font-size:11px;">$91,400</span></div></div>
+            <div class="mini-row" onclick="showToast('📋 PO-2848 — $34K · Delivered')"><div class="mini-left"><div class="mini-dot" style="background:var(--accent);"></div><span class="sc-link">PO-2848</span><span style="color:var(--text2);">· FastComponents</span></div><div style="display:flex;align-items:center;gap:8px;"><span class="badge b-accent">Delivered</span><span style="font-family:var(--mono);font-size:11px;">$34,100</span></div></div>
+            <div class="mini-row" onclick="showToast('📋 PO-2847 — $67K · DELAYED 🚨')"><div class="mini-left"><div class="mini-dot" style="background:var(--red);"></div><span class="sc-link">PO-2847</span><span style="color:var(--text2);">· TechParts Asia</span></div><div style="display:flex;align-items:center;gap:8px;"><span class="badge b-red">⚠ Delayed</span><span style="font-family:var(--mono);font-size:11px;">$67,000</span></div></div>
+          </div>
+        </div>
+        <div class="card" style="animation-delay:.4s">
+          <div class="card-hd"><div class="card-title"><span class="ico">📦</span> Inventory Health</div></div>
+          <div class="card-body">
+            <div class="heat-row"><div class="heat-label">Microchips (SKU-4418)</div><div class="heat-bar"><div class="heat-fill" style="width:78%;background:var(--green);"></div></div><div class="heat-val">780u</div><div class="heat-status"><span class="badge b-green" style="font-size:9px;">OK</span></div></div>
+            <div class="heat-row"><div class="heat-label">Circuit Boards (SKU-4421)</div><div class="heat-bar"><div class="heat-fill" style="width:12%;background:var(--red);"></div></div><div class="heat-val">12u</div><div class="heat-status"><span class="badge b-red" style="font-size:9px;">LOW</span></div></div>
+            <div class="heat-row"><div class="heat-label">Raw Aluminium (SKU-3301)</div><div class="heat-bar"><div class="heat-fill" style="width:62%;background:var(--accent2);"></div></div><div class="heat-val">4.2T</div><div class="heat-status"><span class="badge b-blue" style="font-size:9px;">OK</span></div></div>
+            <div class="heat-row"><div class="heat-label">Copper Wire (SKU-3390)</div><div class="heat-bar"><div class="heat-fill" style="width:35%;background:var(--amber);"></div></div><div class="heat-val">350m</div><div class="heat-status"><span class="badge b-amber" style="font-size:9px;">MED</span></div></div>
+            <div class="heat-row"><div class="heat-label">Packaging (SKU-8801)</div><div class="heat-bar"><div class="heat-fill" style="width:90%;background:var(--green);"></div></div><div class="heat-val">9,000</div><div class="heat-status"><span class="badge b-green" style="font-size:9px;">OK</span></div></div>
+            <div class="heat-row"><div class="heat-label">LCD Panels (SKU-5512)</div><div class="heat-bar"><div class="heat-fill" style="width:22%;background:var(--amber);"></div></div><div class="heat-val">220u</div><div class="heat-status"><span class="badge b-amber" style="font-size:9px;">MED</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROCUREMENT / P2P PROCESS ════════════════════════ -->
+    <div id="nav-procurement" class="view">
+      <div class="page-hd">
+        <div class="page-hd-left">
+          <div class="page-tag">// most important process</div>
+          <div class="page-title">Purchase-to-Pay (P2P)</div>
+          <div class="page-sub">The end-to-end process from identifying a need to paying a supplier — the backbone of supply chain operations</div>
+        </div>
+      </div>
+
+      <!-- P2P process shell -->
+      <div class="process-shell">
+        <div class="process-banner">
+          <div class="pb-tag">// P2P WALKTHROUGH · INTERACTIVE</div>
+          <div class="pb-title">Purchase-to-Pay: From Need to Payment</div>
+          <div class="pb-sub">The #1 most critical supply chain process — follow a real order from stock alert to invoice settlement in 7 stages</div>
+        </div>
+
+        <!-- Step rail -->
+        <div class="step-rail" id="stepRail">
+          <div class="s-item active" onclick="goStep(0)"><div class="s-num">1</div><div class="s-label">Need Identified</div></div>
+          <div class="s-item" onclick="goStep(1)"><div class="s-num">2</div><div class="s-label">PR Created</div></div>
+          <div class="s-item" onclick="goStep(2)"><div class="s-num">3</div><div class="s-label">Supplier Selected</div></div>
+          <div class="s-item" onclick="goStep(3)"><div class="s-num">4</div><div class="s-label">PO Issued</div></div>
+          <div class="s-item" onclick="goStep(4)"><div class="s-num">5</div><div class="s-label">Goods Received</div></div>
+          <div class="s-item" onclick="goStep(5)"><div class="s-num">6</div><div class="s-label">Invoice Matched</div></div>
+          <div class="s-item" onclick="goStep(6)"><div class="s-num">7</div><div class="s-label">Payment Released</div></div>
+        </div>
+
+        <!-- Step detail -->
+        <div class="step-body" id="stepBody"></div>
+      </div>
+
+      <!-- PO List below -->
+      <div class="card" style="margin-top:16px;animation-delay:.2s;">
+        <div class="card-hd">
+          <div class="card-title"><span class="ico">📋</span> All Purchase Orders</div>
+          <div class="card-actions">
+            <button class="tb-btn" onclick="showToast('🔍 Filtered by status')">Filter</button>
+            <button class="tb-btn tb-btn-accent" onclick="showToast('✅ New PO created')">+ New PO</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="sc-table">
+            <thead><tr><th>PO Number</th><th>Supplier</th><th>Item</th><th>Qty</th><th>Value</th><th>Status</th><th>ETA</th><th>Buyer</th></tr></thead>
+            <tbody>
+              <tr onclick="showToast('📋 PO-2851 · TechParts Asia · Pending approval')"><td><span class="sc-link">PO-2851</span></td><td>TechParts Asia</td><td>Microchips X400</td><td>500 units</td><td style="font-family:var(--mono);">$48,200</td><td><span class="badge b-amber">Pending Approval</span></td><td>Nov 28</td><td>J. Chen</td></tr>
+              <tr onclick="showToast('📋 PO-2850 · MetalWorks EU · Approved')"><td><span class="sc-link">PO-2850</span></td><td>MetalWorks EU</td><td>Steel Sheet 3mm</td><td>2 tonnes</td><td style="font-family:var(--mono);">$22,500</td><td><span class="badge b-green">Approved</span></td><td>Nov 18</td><td>A. Kumar</td></tr>
+              <tr onclick="showToast('📋 PO-2849 · GreenRaw Ltd · In Transit')"><td><span class="sc-link">PO-2849</span></td><td>GreenRaw Ltd</td><td>Raw Aluminium</td><td>4.2 tonnes</td><td style="font-family:var(--mono);">$91,400</td><td><span class="badge b-blue">In Transit</span></td><td>Nov 14</td><td>J. Chen</td></tr>
+              <tr onclick="showToast('📋 PO-2848 · FastComponents · Delivered')"><td><span class="sc-link">PO-2848</span></td><td>FastComponents</td><td>Capacitors C10</td><td>10,000 units</td><td style="font-family:var(--mono);">$34,100</td><td><span class="badge b-accent">Delivered</span></td><td>Nov 10 ✓</td><td>S. Patel</td></tr>
+              <tr onclick="showToast('🚨 PO-2847 · TechParts Asia · DELAYED 14 days!')"><td><span class="sc-link">PO-2847</span></td><td>TechParts Asia</td><td>Microchips M200</td><td>1,200 units</td><td style="font-family:var(--mono);">$67,000</td><td><span class="badge b-red">⚠ Delayed</span></td><td>Was Nov 2</td><td>A. Kumar</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INVENTORY ════════════════════════════════════════ -->
+    <div id="nav-inventory" class="view">
+      <div class="page-hd"><div><div class="page-tag">// stock management</div><div class="page-title">Inventory Control</div><div class="page-sub">8 warehouses · 340 active SKUs · Real-time stock levels</div></div></div>
+      <div class="kpi-strip">
+        <div class="kpi" style="--kpi-color:var(--accent)"><div class="kpi-accent"></div><div class="kpi-label">Total SKUs</div><div class="kpi-val">340</div><div class="kpi-delta"><span class="up">↑ 12</span><span class="flat">new this month</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--red)"><div class="kpi-accent"></div><div class="kpi-label">Low Stock Alerts</div><div class="kpi-val">7</div><div class="kpi-delta"><span class="dn">Action required</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--accent2)"><div class="kpi-accent"></div><div class="kpi-label">Warehouse Utilisation</div><div class="kpi-val">76<span style="font-size:16px;">%</span></div><div class="kpi-delta"><span class="flat">Optimal 70–85%</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--green)"><div class="kpi-accent"></div><div class="kpi-label">Inventory Value</div><div class="kpi-val">$2.8<span style="font-size:16px;">M</span></div><div class="kpi-delta"><span class="flat">Across 8 locations</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title"><span class="ico">📦</span> Inventory by SKU</div><button class="tb-btn" onclick="showToast('📤 Exported inventory report')">Export</button></div>
+        <div class="card-body" style="padding:0;">
+          <table class="sc-table">
+            <thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>On Hand</th><th>Reorder Point</th><th>On Order</th><th>Warehouse</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr onclick="showToast('📦 SKU-4418 · Microchips · 780 units')"><td><span class="sc-link">SKU-4418</span></td><td>Microchips X400</td><td>Electronics</td><td>780</td><td>200</td><td>500</td><td>WH-1 (Munich)</td><td><span class="badge b-green">OK</span></td></tr>
+              <tr onclick="showToast('🚨 SKU-4421 · Circuit Boards · CRITICAL — 12 units!')"><td><span class="sc-link">SKU-4421</span></td><td>Circuit Boards CB9</td><td>Electronics</td><td style="color:var(--red);font-weight:700;">12</td><td>50</td><td>0</td><td>WH-1 (Munich)</td><td><span class="badge b-red">CRITICAL</span></td></tr>
+              <tr onclick="showToast('📦 SKU-3301 · Raw Aluminium · 4.2 tonnes')"><td><span class="sc-link">SKU-3301</span></td><td>Raw Aluminium</td><td>Raw Materials</td><td>4,200 kg</td><td>1,000 kg</td><td>91,400 kg</td><td>WH-3 (Rotterdam)</td><td><span class="badge b-blue">Replenishing</span></td></tr>
+              <tr onclick="showToast('📦 SKU-3390 · Copper Wire · 350m')"><td><span class="sc-link">SKU-3390</span></td><td>Copper Wire 2mm</td><td>Raw Materials</td><td>350 m</td><td>200 m</td><td>—</td><td>WH-2 (Lyon)</td><td><span class="badge b-amber">Low</span></td></tr>
+              <tr onclick="showToast('📦 SKU-8801 · Packaging · 9,000 units')"><td><span class="sc-link">SKU-8801</span></td><td>Packaging Box L</td><td>Packaging</td><td>9,000</td><td>1,000</td><td>—</td><td>WH-4 (Warsaw)</td><td><span class="badge b-green">OK</span></td></tr>
+              <tr onclick="showToast('📦 SKU-5512 · LCD Panels · 220 units')"><td><span class="sc-link">SKU-5512</span></td><td>LCD Panel 15"</td><td>Electronics</td><td>220</td><td>300</td><td>1,000</td><td>WH-1 (Munich)</td><td><span class="badge b-amber">Below ROP</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUPPLIERS ════════════════════════════════════════ -->
+    <div id="nav-suppliers" class="view">
+      <div class="page-hd"><div><div class="page-tag">// vendor management</div><div class="page-title">Supplier Network</div><div class="page-sub">47 approved suppliers · Tier 1 & 2 · 3 continents</div></div><button class="tb-btn tb-btn-accent" onclick="showToast('✅ Supplier onboarding started')">+ Onboard Supplier</button></div>
+      <div class="supplier-grid">
+        <div class="sup-card" onclick="showToast('🏭 TechParts Asia — Electronics · Score: 71/100')">
+          <div class="sup-name">TechParts Asia</div><div class="sup-cat">Electronics · Tier 1 · Shanghai</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--amber);">71/100</div><span class="badge b-amber">At Risk</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:78%;background:var(--amber);"></div></div><div class="gauge-val" style="color:var(--amber);font-size:10px;">78%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:61%;background:var(--red);"></div></div><div class="gauge-val" style="color:var(--red);font-size:10px;">61%</div></div>
+        </div>
+        <div class="sup-card" onclick="showToast('🏭 MetalWorks EU — Raw Materials · Score: 94/100')">
+          <div class="sup-name">MetalWorks EU</div><div class="sup-cat">Raw Materials · Tier 1 · Düsseldorf</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--green);">94/100</div><span class="badge b-green">Preferred</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:96%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);font-size:10px;">96%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:92%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);font-size:10px;">92%</div></div>
+        </div>
+        <div class="sup-card" onclick="showToast('🏭 GreenRaw Ltd — Sustainability · Score: 88/100')">
+          <div class="sup-name">GreenRaw Ltd</div><div class="sup-cat">Sustainable Materials · Tier 1 · Amsterdam</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--accent);">88/100</div><span class="badge b-accent">Good</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:91%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);font-size:10px;">91%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:85%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);font-size:10px;">85%</div></div>
+        </div>
+        <div class="sup-card" onclick="showToast('🏭 FastComponents — Electronics · Score: 91/100')">
+          <div class="sup-name">FastComponents</div><div class="sup-cat">Electronics · Tier 1 · Taipei</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--green);">91/100</div><span class="badge b-green">Preferred</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:93%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);font-size:10px;">93%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:89%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);font-size:10px;">89%</div></div>
+        </div>
+        <div class="sup-card" onclick="showToast('🏭 Sigma Packaging — Packaging · Score: 86/100')">
+          <div class="sup-name">Sigma Packaging</div><div class="sup-cat">Packaging · Tier 2 · Warsaw</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--accent);">86/100</div><span class="badge b-accent">Good</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:89%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);font-size:10px;">89%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:84%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);font-size:10px;">84%</div></div>
+        </div>
+        <div class="sup-card" onclick="showToast('🏭 ApexLogix — Logistics · Score: 79/100')">
+          <div class="sup-name">ApexLogix</div><div class="sup-cat">3PL Logistics · Tier 2 · Frankfurt</div>
+          <div class="sup-score"><div class="sup-score-label">SCORE</div><div class="sup-score-val" style="color:var(--accent2);">79/100</div><span class="badge b-blue">Standard</span></div>
+          <div class="gauge-row" style="margin-bottom:4px;"><div class="gauge-label" style="width:80px;font-size:11px;">Quality</div><div class="gauge-track"><div class="gauge-fill" style="width:81%;background:var(--accent2);"></div></div><div class="gauge-val" style="color:var(--accent2);font-size:10px;">81%</div></div>
+          <div class="gauge-row"><div class="gauge-label" style="width:80px;font-size:11px;">On-Time</div><div class="gauge-track"><div class="gauge-fill" style="width:76%;background:var(--accent2);"></div></div><div class="gauge-val" style="color:var(--accent2);font-size:10px;">76%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LOGISTICS ════════════════════════════════════════ -->
+    <div id="nav-logistics" class="view">
+      <div class="page-hd"><div><div class="page-tag">// shipment tracking</div><div class="page-title">Logistics & Shipments</div><div class="page-sub">42 active shipments · 3 modes · Real-time ETA</div></div></div>
+      <div class="kpi-strip">
+        <div class="kpi" style="--kpi-color:var(--accent)"><div class="kpi-accent"></div><div class="kpi-label">Active Shipments</div><div class="kpi-val">42</div></div>
+        <div class="kpi" style="--kpi-color:var(--green)"><div class="kpi-accent"></div><div class="kpi-label">On Schedule</div><div class="kpi-val">38</div><div class="kpi-delta"><span class="up">90.5%</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--red)"><div class="kpi-accent"></div><div class="kpi-label">Delayed</div><div class="kpi-val">4</div><div class="kpi-delta"><span class="dn">Needs attention</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--amber)"><div class="kpi-accent"></div><div class="kpi-label">Avg Transit Time</div><div class="kpi-val">8.3<span style="font-size:16px;">d</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title"><span class="ico">🚚</span> Active Shipments</div></div>
+        <div class="card-body" style="padding:0;">
+          <table class="sc-table">
+            <thead><tr><th>Shipment ID</th><th>Origin</th><th>Destination</th><th>Mode</th><th>Cargo</th><th>Status</th><th>ETA</th><th>Carrier</th></tr></thead>
+            <tbody>
+              <tr onclick="showToast('🚚 SHP-9183 · Delivered 2 days early!')"><td><span class="sc-link">SHP-9183</span></td><td>Rotterdam</td><td>Munich WH-1</td><td>🚛 Road</td><td>4.2T Aluminium</td><td><span class="badge b-green">Delivered ✓</span></td><td>Nov 11 ✓</td><td>ApexLogix</td></tr>
+              <tr onclick="showToast('✈️ SHP-9182 · In flight from Shanghai')"><td><span class="sc-link">SHP-9182</span></td><td>Shanghai</td><td>Frankfurt Hub</td><td>✈️ Air</td><td>500u Microchips</td><td><span class="badge b-blue">In Transit</span></td><td>Nov 14</td><td>DHL Express</td></tr>
+              <tr onclick="showToast('🚢 SHP-9181 · Sea freight — on schedule')"><td><span class="sc-link">SHP-9181</span></td><td>Taipei</td><td>Rotterdam</td><td>🚢 Sea</td><td>10K Capacitors</td><td><span class="badge b-blue">In Transit</span></td><td>Nov 22</td><td>Maersk</td></tr>
+              <tr onclick="showToast('🚨 SHP-9180 · DELAYED — customs hold')"><td><span class="sc-link">SHP-9180</span></td><td>Shanghai</td><td>Munich WH-1</td><td>🚢 Sea</td><td>1.2K Microchips</td><td><span class="badge b-red">⚠ Customs Hold</span></td><td>Was Nov 2</td><td>CMA CGM</td></tr>
+              <tr onclick="showToast('🚛 SHP-9179 · Loading at Lyon warehouse')"><td><span class="sc-link">SHP-9179</span></td><td>Lyon WH-2</td><td>Warsaw WH-4</td><td>🚛 Road</td><td>350m Copper Wire</td><td><span class="badge b-amber">Loading</span></td><td>Nov 16</td><td>Internal Fleet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ════════════════════════════════════════ -->
+    <div id="nav-analytics" class="view">
+      <div class="page-hd"><div><div class="page-tag">// business intelligence</div><div class="page-title">Supply Chain Analytics</div><div class="page-sub">Performance metrics · Cost analysis · Demand forecasting</div></div></div>
+      <div class="kpi-strip">
+        <div class="kpi" style="--kpi-color:var(--accent)"><div class="kpi-accent"></div><div class="kpi-label">Total Spend YTD</div><div class="kpi-val">$4.2<span style="font-size:16px;">M</span></div><div class="kpi-delta"><span class="up">↓ 8%</span><span class="flat">savings</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--green)"><div class="kpi-accent"></div><div class="kpi-label">Cost Savings</div><div class="kpi-val">$340<span style="font-size:16px;">K</span></div><div class="kpi-delta"><span class="up">↑ 23%</span><span class="flat">vs target</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--amber)"><div class="kpi-accent"></div><div class="kpi-label">Perfect Order Rate</div><div class="kpi-val">91.4<span style="font-size:16px;">%</span></div><div class="kpi-delta"><span class="flat">Target: 95%</span></div></div>
+        <div class="kpi" style="--kpi-color:var(--accent2)"><div class="kpi-accent"></div><div class="kpi-label">Cash-to-Cash Cycle</div><div class="kpi-val">34<span style="font-size:16px;">d</span></div><div class="kpi-delta"><span class="up">↓ 6d</span><span class="flat">improved</span></div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><div class="card-title"><span class="ico">💰</span> Spend by Category</div></div>
+          <div class="card-body">
+            <div class="gauge-row"><div class="gauge-label">Electronics</div><div class="gauge-track"><div class="gauge-fill" style="width:44%;background:var(--accent2);"></div></div><div class="gauge-val" style="color:var(--accent2);">$1.84M</div></div>
+            <div class="gauge-row"><div class="gauge-label">Raw Materials</div><div class="gauge-track"><div class="gauge-fill" style="width:32%;background:var(--purple);"></div></div><div class="gauge-val" style="color:var(--purple);">$1.34M</div></div>
+            <div class="gauge-row"><div class="gauge-label">Logistics</div><div class="gauge-track"><div class="gauge-fill" style="width:14%;background:var(--amber);"></div></div><div class="gauge-val" style="color:var(--amber);">$588K</div></div>
+            <div class="gauge-row"><div class="gauge-label">Packaging</div><div class="gauge-track"><div class="gauge-fill" style="width:7%;background:var(--accent);"></div></div><div class="gauge-val" style="color:var(--accent);">$294K</div></div>
+            <div class="gauge-row"><div class="gauge-label">Other</div><div class="gauge-track"><div class="gauge-fill" style="width:3%;background:var(--text3);"></div></div><div class="gauge-val" style="color:var(--text3);">$126K</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title"><span class="ico">📈</span> Demand Forecast Q4</div></div>
+          <div class="card-body">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:12px;">AI model confidence: 87% · Recommends pre-buying 300 units</div>
+            <div class="gauge-row"><div class="gauge-label">Microchips X400</div><div class="gauge-track"><div class="gauge-fill" style="width:82%;background:var(--green);"></div></div><div class="gauge-val" style="color:var(--green);">+22%</div></div>
+            <div class="gauge-row"><div class="gauge-label">Circuit Boards</div><div class="gauge-track"><div class="gauge-fill" style="width:68%;background:var(--accent2);"></div></div><div class="gauge-val" style="color:var(--accent2);">+18%</div></div>
+            <div class="gauge-row"><div class="gauge-label">LCD Panels</div><div class="gauge-track"><div class="gauge-fill" style="width:55%;background:var(--amber);"></div></div><div class="gauge-val" style="color:var(--amber);">+12%</div></div>
+            <div class="gauge-row"><div class="gauge-label">Raw Aluminium</div><div class="gauge-track"><div class="gauge-fill" style="width:40%;background:var(--purple);"></div></div><div class="gauge-val" style="color:var(--purple);">+8%</div></div>
+            <div style="margin-top:12px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--accent);">
+              💡 AI Recommendation: Increase Safety Stock for Microchips by 300 units before Nov 20 to avoid stockout risk
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toast-ico">✅</span><span id="toast-msg">Done</span></div>
+
+<script>
+// ── P2P STEPS ───────────────────────────────────────────────────────────────
+const P2P_STEPS = [
+  {
+    label:'Need Identified',
+    badgeText:'Stage 1 · Demand Signal', badgeBg:'rgba(168,85,247,.15)', badgeColor:'#a855f7',
+    title:'Stock Alert Triggers a Purchase Need',
+    desc:'The inventory system detects that Circuit Boards (SKU-4421) have dropped below the reorder point of 50 units — only 12 remain. ChainOS automatically raises a demand signal, calculates the optimal reorder quantity (300 units) using historical demand data and lead time, and notifies the procurement team to raise a Purchase Requisition.',
+    actions:[
+      {ico:'⚠️',bg:'rgba(239,68,68,.1)',t:'Stockout alert triggered',s:'SKU-4421 · 12 units remaining · Reorder point: 50'},
+      {ico:'🤖',bg:'rgba(0,212,170,.1)',t:'AI calculates optimal order qty',s:'EOQ model: 300 units · Lead time: 14 days · Safety stock: 80'},
+      {ico:'📧',bg:'rgba(14,165,233,.1)',t:'Procurement team notified',s:'Buyer J. Chen alerted via email + dashboard · Urgency: High'},
+    ],
+    rec:{ico:'⚠️',bg:'rgba(239,68,68,.15)',name:'SKU-4421 Stock Alert',sub:'Circuit Boards CB9 · WH-1 Munich',
+      fields:[
+        {l:'Current Stock',v:'12 units 🔴'},
+        {l:'Reorder Point',v:'50 units'},
+        {l:'Recommended Qty',v:'300 units (EOQ)'},
+        {l:'Lead Time',v:'14 days'},
+        {l:'Urgency',v:'HIGH — Stockout risk'},
+      ],
+      prog:12,progC:'#ef4444',
+      tl:[
+        {ico:'📊',bg:'rgba(239,68,68,.2)',t:'Stock level breach detected',m:'System · Automated · Nov 12 08:00'},
+        {ico:'🤖',bg:'rgba(0,212,170,.2)',t:'EOQ calculation completed',m:'AI model · 300 units · $18,600 est.'},
+        {ico:'📧',bg:'rgba(14,165,233,.2)',t:'Buyer J. Chen notified',m:'Email + dashboard alert · Nov 12 08:02'},
+      ]
+    }
+  },
+  {
+    label:'PR Created',
+    badgeText:'Stage 2 · Purchase Requisition', badgeBg:'rgba(14,165,233,.15)', badgeColor:'#0ea5e9',
+    title:'Buyer Creates a Purchase Requisition (PR)',
+    desc:'Buyer J. Chen reviews the alert and raises a formal Purchase Requisition in ChainOS — specifying the item, quantity, required delivery date, and estimated budget. The PR is automatically routed to the Finance Manager for approval based on spend authority rules. Spend above $10K requires senior approval.',
+    actions:[
+      {ico:'📝',bg:'rgba(14,165,233,.1)',t:'PR-8821 created by J. Chen',s:'300 units Circuit Boards · $18,600 · Required by Nov 28'},
+      {ico:'🔀',bg:'rgba(168,85,247,.1)',t:'Auto-routed for approval',s:'Finance Manager A. Kumar · Spend > $10K threshold'},
+      {ico:'✅',bg:'rgba(34,197,94,.1)',t:'PR approved in 2 hours',s:'A. Kumar approved · Budget confirmed · Status: Approved'},
+    ],
+    rec:{ico:'📝',bg:'rgba(14,165,233,.15)',name:'PR-8821',sub:'Purchase Requisition · Created by J. Chen',
+      fields:[
+        {l:'Item',v:'Circuit Boards CB9'},
+        {l:'Quantity',v:'300 units'},
+        {l:'Est. Cost',v:'$18,600'},
+        {l:'Required By',v:'Nov 28, 2024'},
+        {l:'Status',v:'✅ Approved'},
+      ],
+      prog:28,progC:'#0ea5e9',
+      tl:[
+        {ico:'📝',bg:'rgba(14,165,233,.2)',t:'PR-8821 raised',m:'J. Chen · Nov 12 09:15'},
+        {ico:'🔀',bg:'rgba(168,85,247,.2)',t:'Routed to A. Kumar',m:'Auto-approval workflow · Spend $18,600'},
+        {ico:'✅',bg:'rgba(34,197,94,.2)',t:'Approved by A. Kumar',m:'Nov 12 11:22 · 2h 7min turnaround'},
+      ]
+    }
+  },
+  {
+    label:'Supplier Selected',
+    badgeText:'Stage 3 · Sourcing', badgeBg:'rgba(245,158,11,.15)', badgeColor:'#f59e0b',
+    title:'RFQ Sent — Best Supplier Selected',
+    desc:'ChainOS sends an automated Request for Quotation (RFQ) to 3 approved suppliers. Quotes are received and scored against price, lead time, quality rating, and reliability. FastComponents wins — offering the best total cost of ownership at $18,000 with a 10-day lead time and a 91% supplier score, despite not being the cheapest.',
+    actions:[
+      {ico:'📤',bg:'rgba(245,158,11,.1)',t:'RFQ sent to 3 suppliers',s:'FastComponents · TechParts Asia · CircuitHub — 48hr deadline'},
+      {ico:'📊',bg:'rgba(14,165,233,.1)',t:'Quotes compared by AI',s:'Price · Lead time · Quality score · Reliability — weighted model'},
+      {ico:'🏆',bg:'rgba(34,197,94,.1)',t:'FastComponents selected',s:'$18,000 · 10-day lead · Score 91/100 — best TCO'},
+    ],
+    rec:{ico:'🏆',bg:'rgba(34,197,94,.15)',name:'FastComponents',sub:'Preferred Supplier · Electronics · Taipei',
+      fields:[
+        {l:'Quoted Price',v:'$18,000 ✓ Best'},
+        {l:'Lead Time',v:'10 days ✓ Fastest'},
+        {l:'Supplier Score',v:'91/100 ✓ Preferred'},
+        {l:'Quality Rating',v:'93%'},
+        {l:'Decision',v:'🏆 Selected'},
+      ],
+      prog:42,progC:'#22c55e',
+      tl:[
+        {ico:'📤',bg:'rgba(245,158,11,.2)',t:'RFQ sent to 3 suppliers',m:'Nov 13 · Auto-generated by ChainOS'},
+        {ico:'📨',bg:'rgba(14,165,233,.2)',t:'3 quotes received',m:'FastComponents · TechParts · CircuitHub · Nov 14'},
+        {ico:'🏆',bg:'rgba(34,197,94,.2)',t:'FastComponents awarded',m:'Best TCO · J. Chen decision · Nov 14 16:00'},
+      ]
+    }
+  },
+  {
+    label:'PO Issued',
+    badgeText:'Stage 4 · Purchase Order', badgeBg:'rgba(0,212,170,.15)', badgeColor:'#00d4aa',
+    title:'PO-2852 Issued to FastComponents',
+    desc:'ChainOS auto-generates Purchase Order PO-2852 from the approved PR and supplier selection. The PO includes item specs, quantity, agreed price, delivery address, payment terms (Net 30), and quality requirements. It is digitally sent to FastComponents via the supplier portal. The supplier confirms receipt within 1 hour.',
+    actions:[
+      {ico:'📋',bg:'rgba(0,212,170,.1)',t:'PO-2852 auto-generated',s:'$18,000 · Net 30 · Delivery: Munich WH-1 · Nov 25'},
+      {ico:'📤',bg:'rgba(14,165,233,.1)',t:'PO sent via supplier portal',s:'FastComponents confirmed receipt · 58 minutes'},
+      {ico:'🔔',bg:'rgba(168,85,247,.1)',t:'Delivery tracking activated',s:'Expected Nov 25 · Auto-alert if delayed by >1 day'},
+    ],
+    rec:{ico:'📋',bg:'rgba(0,212,170,.15)',name:'PO-2852',sub:'Purchase Order · FastComponents · Issued',
+      fields:[
+        {l:'Item & Qty',v:'300x Circuit Boards CB9'},
+        {l:'PO Value',v:'$18,000'},
+        {l:'Payment Terms',v:'Net 30 days'},
+        {l:'Delivery Date',v:'Nov 25, 2024'},
+        {l:'Status',v:'Confirmed by supplier'},
+      ],
+      prog:57,progC:'#00d4aa',
+      tl:[
+        {ico:'📋',bg:'rgba(0,212,170,.2)',t:'PO-2852 generated',m:'ChainOS auto-created · Nov 14 17:00'},
+        {ico:'📤',bg:'rgba(14,165,233,.2)',t:'Sent to FastComponents portal',m:'Digital delivery · Confirmed 17:58'},
+        {ico:'🔔',bg:'rgba(168,85,247,.2)',t:'Shipment tracking enabled',m:'ETA alerts configured · SHP-9184 created'},
+      ]
+    }
+  },
+  {
+    label:'Goods Received',
+    badgeText:'Stage 5 · Goods Receipt', badgeBg:'rgba(34,197,94,.15)', badgeColor:'#22c55e',
+    title:'Goods Arrive — 3-Way Match Begins',
+    desc:'On Nov 24, one day early, SHP-9184 arrives at Munich WH-1. The warehouse team scans each pallet using ChainOS mobile. All 300 units are counted and quality-inspected — 298 pass, 2 are rejected with a defect note raised. A Goods Receipt Note (GRN-4471) is created, triggering the invoice matching process.',
+    actions:[
+      {ico:'📱',bg:'rgba(34,197,94,.1)',t:'Goods scanned on arrival',s:'ChainOS mobile · 300 units received · Munich WH-1 · Nov 24'},
+      {ico:'🔍',bg:'rgba(245,158,11,.1)',t:'Quality inspection completed',s:'298 accepted · 2 rejected · Defect note DN-0088 raised'},
+      {ico:'📄',bg:'rgba(14,165,233,.1)',t:'GRN-4471 created',s:'Goods Receipt Note auto-generated · Triggers invoice matching'},
+    ],
+    rec:{ico:'📦',bg:'rgba(34,197,94,.15)',name:'GRN-4471',sub:'Goods Receipt Note · Munich WH-1 · Nov 24',
+      fields:[
+        {l:'PO Reference',v:'PO-2852'},
+        {l:'Qty Received',v:'300 units'},
+        {l:'Qty Accepted',v:'298 units ✅'},
+        {l:'Qty Rejected',v:'2 units ❌ (defect)'},
+        {l:'Status',v:'GRN Raised · Matching pending'},
+      ],
+      prog:71,progC:'#22c55e',
+      tl:[
+        {ico:'🚚',bg:'rgba(34,197,94,.2)',t:'SHP-9184 arrived at WH-1',m:'Nov 24 09:15 · 1 day early'},
+        {ico:'📱',bg:'rgba(14,165,233,.2)',t:'Warehouse scan completed',m:'300 units · ChainOS mobile · 11:30'},
+        {ico:'📄',bg:'rgba(34,197,94,.2)',t:'GRN-4471 created',m:'Quality check passed · Invoice match triggered'},
+      ]
+    }
+  },
+  {
+    label:'Invoice Matched',
+    badgeText:'Stage 6 · 3-Way Match', badgeBg:'rgba(168,85,247,.15)', badgeColor:'#a855f7',
+    title:'3-Way Match: PO · GRN · Invoice',
+    desc:'FastComponents submits invoice INV-FC-2024-1109 for $18,000. ChainOS automatically runs a 3-way match: the invoice is compared against PO-2852 (ordered 300 units at $60/unit) and GRN-4471 (received 298 units). The system detects a $120 discrepancy — 2 rejected units — and raises a credit note request automatically. Match passes on 298 units.',
+    actions:[
+      {ico:'🧾',bg:'rgba(168,85,247,.1)',t:'Invoice INV-FC-2024-1109 received',s:'FastComponents · $18,000 · Submitted via portal'},
+      {ico:'⚡',bg:'rgba(0,212,170,.1)',t:'3-way match auto-run',s:'PO-2852 ↔ GRN-4471 ↔ Invoice · Match: 298/300 units ✅'},
+      {ico:'📝',bg:'rgba(245,158,11,.1)',t:'Credit note CN-0022 raised',s:'2 rejected units × $60 = $120 deducted · Approved value: $17,880'},
+    ],
+    rec:{ico:'🧾',bg:'rgba(168,85,247,.15)',name:'3-Way Match Result',sub:'PO-2852 · GRN-4471 · INV-FC-2024-1109',
+      fields:[
+        {l:'Invoice Amount',v:'$18,000'},
+        {l:'Matched (298u)',v:'$17,880 ✅'},
+        {l:'Disputed (2u)',v:'$120 — credit note'},
+        {l:'Match Status',v:'✅ Matched (99.3%)'},
+        {l:'Approved for Pay',v:'$17,880'},
+      ],
+      prog:85,progC:'#a855f7',
+      tl:[
+        {ico:'🧾',bg:'rgba(168,85,247,.2)',t:'Invoice received',m:'FastComponents · $18,000 · Nov 25'},
+        {ico:'⚡',bg:'rgba(0,212,170,.2)',t:'3-way match completed',m:'Auto-run · 4 seconds · 99.3% match'},
+        {ico:'📝',bg:'rgba(245,158,11,.2)',t:'Credit note CN-0022 raised',m:'$120 deducted · FastComponents notified'},
+      ]
+    }
+  },
+  {
+    label:'Payment Released',
+    badgeText:'Stage 7 · Payment · Process Complete ✓', badgeBg:'rgba(34,197,94,.15)', badgeColor:'#22c55e',
+    title:'Payment Released — P2P Cycle Complete',
+    desc:'On the agreed payment date (Dec 24, Net 30), ChainOS automatically triggers payment of $17,880 to FastComponents via BACS transfer. The supplier\'s account is updated, the PO is closed, and the inventory is confirmed at 298 units. The full P2P cycle is recorded for audit. Cycle time: 12 days from need to delivery, 42 days to payment.',
+    actions:[
+      {ico:'💳',bg:'rgba(34,197,94,.1)',t:'Payment PAY-3341 released',s:'$17,880 · BACS · FastComponents · Dec 24 · Net 30'},
+      {ico:'✅',bg:'rgba(0,212,170,.1)',t:'PO-2852 closed',s:'All documents reconciled · Audit trail complete · Cycle: 42 days'},
+      {ico:'📊',bg:'rgba(14,165,233,.1)',t:'KPIs updated in dashboard',s:'P2P cycle time · Supplier score · Cost per unit · Savings tracked'},
+    ],
+    rec:{ico:'✅',bg:'rgba(34,197,94,.15)',name:'P2P Cycle Complete',sub:'PO-2852 — Closed · $17,880 paid',
+      fields:[
+        {l:'Payment Amount',v:'$17,880 ✅'},
+        {l:'Payment Date',v:'Dec 24, 2024'},
+        {l:'Payment Method',v:'BACS Transfer'},
+        {l:'P2P Cycle Time',v:'42 days (lead: 10d)'},
+        {l:'Cost Saving',v:'$600 vs budget 💚'},
+      ],
+      prog:100,progC:'#22c55e',
+      tl:[
+        {ico:'💳',bg:'rgba(34,197,94,.2)',t:'PAY-3341 processed',m:'$17,880 · BACS · Dec 24 · Auto-triggered'},
+        {ico:'✅',bg:'rgba(0,212,170,.2)',t:'PO-2852 closed',m:'All stages complete · Audit trail saved'},
+        {ico:'🎉',bg:'rgba(34,197,94,.2)',t:'P2P process complete',m:'12d need→delivery · 42d cycle · $600 saved'},
+      ]
+    }
+  }
+];
+
+let curStep = 0;
+
+function renderStep(i) {
+  const s = P2P_STEPS[i];
+  const items = document.querySelectorAll('.s-item');
+  items.forEach((el, idx) => {
+    el.classList.remove('active','done');
+    const num = el.querySelector('.s-num');
+    if (idx < i) { el.classList.add('done'); num.textContent = '✓'; }
+    else { num.textContent = idx + 1; }
+    if (idx === i) el.classList.add('active');
+  });
+
+  const fieldsHTML = s.rec.fields.map(f =>
+    `<div class="rec-field"><div class="rf-label">${f.l}</div><div class="rf-val">${f.v}</div></div>`
+  ).join('');
+
+  const tlHTML = s.rec.tl.map(t =>
+    `<div class="tl-item"><div class="tl-dot" style="background:${t.bg};">${t.ico}</div><div><div class="tl-title">${t.t}</div><div class="tl-meta">${t.m}</div></div></div>`
+  ).join('');
+
+  const actHTML = s.actions.map(a =>
+    `<div class="s-action" onclick="showToast('✅ ${a.t}')"><div class="s-action-ico" style="background:${a.bg};">${a.ico}</div><div><div class="s-action-t">${a.t}</div><div class="s-action-s">${a.s}</div></div></div>`
+  ).join('');
+
+  document.getElementById('stepBody').innerHTML = `
+    <div class="step-grid">
+      <div>
+        <div class="s-badge" style="background:${s.badgeBg};color:${s.badgeColor};">${s.badgeText}</div>
+        <div class="s-title">${s.title}</div>
+        <div class="s-desc">${s.desc}</div>
+        <div class="s-actions">${actHTML}</div>
+        <div class="nav-btns">
+          <button class="nav-btn nb-prev" ${i===0?'disabled':''} onclick="goStep(${i-1})">← Previous</button>
+          <button class="nav-btn nb-next" onclick="${i===6?`showToast('🎉 P2P complete! Cycle time: 42 days · $600 saved')`:  `goStep(${i+1})`}">${i===6?'🔄 Restart P2P':'Next Stage →'}</button>
+        </div>
+      </div>
+      <div>
+        <div class="rec-panel">
+          <div class="rec-top">
+            <div class="rec-av" style="background:${s.rec.bg};">${s.rec.ico}</div>
+            <div><div class="rec-name">${s.rec.name}</div><div class="rec-sub">${s.rec.sub}</div></div>
+          </div>
+          <div class="rec-body">
+            <div class="rec-fields">${fieldsHTML}</div>
+            <div class="prog-row">
+              <div class="prog-label">P2P Progress</div>
+              <div class="prog-track"><div class="prog-fill" style="width:${s.rec.prog}%;background:${s.rec.progC};"></div></div>
+              <div class="prog-val" style="color:${s.rec.progC};">${s.rec.prog}%</div>
+            </div>
+            <div class="rec-div"></div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;">Activity Log</div>
+            <div class="rec-tl">${tlHTML}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function goStep(i) { curStep = i; renderStep(i); }
+
+// ── NAV ─────────────────────────────────────────────────────────────────────
+const VIEWS = ['overview','procurement','inventory','suppliers','logistics','analytics'];
+
+function switchNav(view, el) {
+  VIEWS.forEach(v => {
+    const e = document.getElementById('nav-'+v);
+    if (e) e.classList.remove('active');
+  });
+  const t = document.getElementById('nav-'+view);
+  if (t) t.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (view === 'procurement') renderStep(curStep);
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  const p = msg.split(' ');
+  document.getElementById('toast-ico').textContent = p[0];
+  document.getElementById('toast-msg').textContent = p.slice(1).join(' ');
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+renderStep(0);
+</script>
+</body>
+</html>
