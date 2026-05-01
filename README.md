@@ -160,7 +160,7 @@ Amazon Customer Centric Approach
 https://mobile.twitter.com/arvanaghi/status/1537519858233008128
 
 
-AI
+AI DEMO
 
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/multiprocure_demo.html
 
@@ -172,7 +172,7 @@ https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/AI
 
 ERP DEMO
 
-https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/erp_demo.html
+
 
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/supply_chain_demo.html
 
