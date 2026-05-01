@@ -170,4 +170,12 @@ https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/rp
 
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/AIAgents.html
 
+ERP DEMO
+
+https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/erp_demo.html
+
+https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/supply_chain_demo.html
+
+
+
 https://htmlpreview.github.io/?https://github.com/ogut77/University/blob/main/O2C_ERP.html
